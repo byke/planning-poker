@@ -57,6 +57,7 @@
     "allowMembersToManageSession": "允許成員管理房間",
     "creating": "建立中...",
     "create": "建立",
-    "days": "Days"
+    "days": "Days",
+    "daysImperial": "Days (Imperial)"
   }
 }

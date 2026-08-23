@@ -57,6 +57,7 @@
     "allowMembersToManageSession": "Mitgliedern erlauben, die Sitzung zu verwalten",
     "creating": "Erstelle...",
     "create": "Erstellen",
-    "days": "Days"
+    "days": "Days",
+    "daysImperial": "Days (Imperial)"
   }
 }

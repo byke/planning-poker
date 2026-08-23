@@ -57,6 +57,7 @@
     "allowMembersToManageSession": "सदस्यों को सत्र प्रबंधित करने की अनुमति दें",
     "creating": "बना रहा है...",
     "create": "बनाएं",
-    "days": "Days"
+    "days": "Days",
+    "daysImperial": "Days (Imperial)"
   }
 }

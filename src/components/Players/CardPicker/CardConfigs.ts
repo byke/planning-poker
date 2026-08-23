@@ -97,6 +97,24 @@ export const daysCards: CardConfig[] = [
   { value: 10, displayValue: '10', color: '#9B59B6' },
 ]
 
+export const daysImperialCards: CardConfig[] = [
+  { value: 0.25, displayValue: '¼', color: '#e7edf3' },
+  { value: 0.5, displayValue: '½', color: '#9EC8FE' },
+  { value: 0.75, displayValue: '¾', color: '#9EC8FE' },
+  { value: 1, displayValue: '1', color: '#A3DFF2' },
+  { value: 1.25, displayValue: '1¼', color: '#A3DFF2' },
+  { value: 1.5, displayValue: '1½', color: '#9DD49A' },
+  { value: 1.75, displayValue: '1¾', color: '#9DD49A' },
+  { value: 2, displayValue: '2', color: '#F4DD94' },
+  { value: 2.5, displayValue: '2½', color: '#F4DD94' },
+  { value: 3, displayValue: '3', color: '#F39893' },
+  { value: 3.5, displayValue: '3½', color: '#F39893' },
+  { value: 4, displayValue: '4', color: '#D96C6C' },
+  { value: 4.5, displayValue: '4½', color: '#D96C6C' },
+  { value: 5, displayValue: '5', color: '#9B59B6' },
+  { value: 10, displayValue: '10', color: '#9B59B6' },
+]
+
 export const getCards = (gameType: GameType | undefined): CardConfig[] => {
   switch (gameType) {
     case GameType.Fibonacci:
@@ -107,8 +125,10 @@ export const getCards = (gameType: GameType | undefined): CardConfig[] => {
       return tShirtCards;
     case GameType.TShirtAndNumber:
       return tShirtAndNumbersCards;
-      case GameType.Days:
+    case GameType.Days:
       return daysCards;
+    case GameType.DaysImperial:
+      return daysImperialCards;
     case GameType.Custom:
       return customCardsTemplate;
     default:

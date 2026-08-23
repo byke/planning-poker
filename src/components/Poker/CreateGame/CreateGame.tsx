@@ -21,7 +21,7 @@ export const CreateGame = () => {
   const [createdBy, setCreatedBy] = useState(
     localStorage.getItem('recentPlayerName') || uniqueNamesGenerator(userNameConfig),
   );
-  const [gameType, setGameType] = useState(GameType.Days);
+  const [gameType, setGameType] = useState(GameType.DaysImperial);
   const [hasDefaults, setHasDefaults] = useState({ game: true, name: true });
   const [loading, setLoading] = useState(false);
   const [allowMembersToManageSession, setAllowMembersToManageSession] = useState(false);
@@ -142,6 +142,7 @@ export const CreateGame = () => {
             </legend>
             <div className='flex flex-col gap-2'>
               {[
+                { type: GameType.DaysImperial, label: t('CreateGame.daysImperial') },
                 { type: GameType.Days, label: t('CreateGame.days') },
                 { type: GameType.Fibonacci, label: t('CreateGame.fibonacci') },
                 { type: GameType.ShortFibonacci, label: t('CreateGame.shortFibonacci') },

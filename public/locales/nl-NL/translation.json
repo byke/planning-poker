@@ -57,6 +57,7 @@
     "allowMembersToManageSession": "Sta leden toe de sessie te beheren",
     "creating": "Bezig met aanmaken...",
     "create": "Aanmaken",
-    "days": "Days"
+    "days": "Days",
+    "daysImperial": "Days (Imperial)"
   }
 }

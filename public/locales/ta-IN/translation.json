@@ -57,6 +57,7 @@
     "allowMembersToManageSession": "உறுப்பினர்கள் அமர்வை நிர்வகிக்க அனுமதிக்கவும்",
     "creating": "உருவாக்கப்படுகிறது...",
     "create": "உருவாக்கவும்",
-    "days": "Days"
+    "days": "Days",
+    "daysImperial": "Days (Imperial)"
   }
 }

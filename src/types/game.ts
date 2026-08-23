@@ -36,8 +36,9 @@ export interface NewGame {
   createdByPlayerId?: string; 
 }
 
-export enum GameType {
+export enum GameType {  
   Days = 'Days',
+  DaysImperial = 'Days (Imperial)',
   Fibonacci = 'Fibonacci',
   ShortFibonacci = 'ShortFibonacci',
   TShirt = 'TShirt',
