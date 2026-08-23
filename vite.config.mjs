@@ -11,5 +11,13 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), EnvironmentPlugin('all')],
   build: {
     outDir: 'build',
+    rollupOptions: {
+      external: ['canvas-confetti'],
+      output: {
+        globals: {
+          'canvas-confetti': 'confetti'
+        }
+      }
+    }
   },
 });

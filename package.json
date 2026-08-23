@@ -5,6 +5,7 @@
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.6",
     "@types/react-lazy-load-image-component": "^1.6.4",
+    "canvas-confetti": "^1.9.4",
     "country-flag-emoji-polyfill": "^0.1.8",
     "country-flag-icons": "^1.5.7",
     "firebase": "^8.3.2",
@@ -83,7 +84,7 @@
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^12.1.10",
     "@types/jest": "^26.0.15",
-    "@types/node": "^12.0.0",
+    "@types/node": "^20.19.43",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
