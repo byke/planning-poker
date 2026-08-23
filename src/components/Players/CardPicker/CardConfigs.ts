@@ -107,7 +107,7 @@ export const getCards = (gameType: GameType | undefined): CardConfig[] => {
       return tShirtCards;
     case GameType.TShirtAndNumber:
       return tShirtAndNumbersCards;
-      case GameType.MBOSP:
+      case GameType.Days:
       return daysCards;
     case GameType.Custom:
       return customCardsTemplate;
