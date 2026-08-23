@@ -36,12 +36,12 @@ export const Poker = () => {
     let effectCleanup = true;
 
     if (effectCleanup) {
-      const currentPlayerId = getCurrentPlayerId(id);
+      const currentPlayerId = localStorage.getItem('currentPlayerId');
       if (!currentPlayerId) {
         history.push(`/join/${id}`);
       }
 
-      setCurrentPlayerId(currentPlayerId);
+      setCurrentPlayerId(currentPlayerId?.toString() || undefined);
       setIsLoading(true);
     }
 

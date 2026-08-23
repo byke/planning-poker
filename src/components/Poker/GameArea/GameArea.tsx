@@ -10,14 +10,26 @@ interface GameAreaProps {
   players: Player[];
   currentPlayerId: string;
 }
+
 export const GameArea: React.FC<GameAreaProps> = ({ game, players, currentPlayerId }) => {
   return (
     <>
-      <div className='flex flex-col min-h-[60%] overflow-auto p-0.5 justify-center'>
-        <Players game={game} players={players} currentPlayerId={currentPlayerId} />
-        <GameController game={game} players={players} currentPlayerId={currentPlayerId} />
+      {/* Main Layout: GameController on left, Team Panels on right */}
+      <div className='flex flex-col lg:flex-row w-full gap-4 p-4 min-h-[60%] overflow-auto'>
+        
+        {/* Left Column: GameController - Fixed Width */}
+        <div className='w-full lg:w-120 flex-shrink-0'>
+          <GameController game={game} players={players} currentPlayerId={currentPlayerId} />
+        </div>
+
+        {/* Right Column: Team Panels - Takes remaining space */}
+        <div className='w-full lg:flex-1 overflow-y-auto'>
+          <Players game={game} players={players} currentPlayerId={currentPlayerId} />
+        </div>
       </div>
-      <div className='text-center flex justify-center'>
+
+      {/* Bottom: CardPicker - Full Width */}
+      <div className='text-center flex justify-center w-full'>
         <CardPicker game={game} players={players} currentPlayerId={currentPlayerId} />
       </div>
     </>

@@ -32,12 +32,15 @@ export interface NewGame {
   isAllowMembersToManageSession?: boolean;
   createdBy: string;
   createdAt: Date;
+  createdByTeam: string,
+  createdByPlayerId?: string; 
 }
 
 export enum GameType {
+  Days = 'Days',
   Fibonacci = 'Fibonacci',
   ShortFibonacci = 'ShortFibonacci',
   TShirt = 'TShirt',
-  TShirtAndNumber = 'TShirtAndNumber',
-  Custom = 'Custom',
+  TShirtAndNumber = 'TShirtAndNumber',  
+  Custom = 'Custom'
 }

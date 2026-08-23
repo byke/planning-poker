@@ -14,6 +14,9 @@ export const JoinGame = () => {
   const [gameFound, setIsGameFound] = useState(true);
   const [showNotExistMessage, setShowNotExistMessage] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [playerTeam, setPlayerTeam] = useState(
+    () => localStorage.getItem('recentPlayerTeam') || '',
+  );
 
   useEffect(() => {
     async function fetchData() {
@@ -39,16 +42,21 @@ export const JoinGame = () => {
     const form = event.target as HTMLFormElement;
     const gameId = (form.elements.namedItem('joinGameId') as HTMLInputElement)?.value;
     const playerName = (form.elements.namedItem('playerName') as HTMLInputElement)?.value;
+    const playerTeam = (form.elements.namedItem('playerTeam') as HTMLInputElement)?.value;
 
     setLoading(true);
     if (joinGameId) {
       localStorage.setItem('recentPlayerName', playerName);
-      const res = await addPlayerToGame(gameId, playerName);
+      localStorage.setItem('recentPlayerTeam', playerTeam)
 
-      setIsGameFound(res);
-      if (res) {
+      const playerIdRes = await addPlayerToGame(gameId, playerName, playerTeam);
+      if (playerIdRes) {
+        localStorage.setItem('currentPlayerId', playerIdRes);
         history.push(`/game/${joinGameId}`);
+      } else {
+        setIsGameFound(false);
       }
+
       setLoading(false);
     }
   };
@@ -65,9 +73,8 @@ export const JoinGame = () => {
                 id='joinGameId'
                 required
                 type='text'
-                className={`w-full border border-gray-400 dark:border-gray-700 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-400 ${
-                  !gameFound ? 'border-red-500' : ''
-                }`}
+                className={`w-full border border-gray-400 dark:border-gray-700 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-400 ${!gameFound ? 'border-red-500' : ''
+                  }`}
                 placeholder='xyz...'
                 value={joinGameId || ''}
                 onChange={(e) => setJoinGameId(e.target.value)}
@@ -75,6 +82,21 @@ export const JoinGame = () => {
               {!gameFound && (
                 <p className='text-red-600 text-xs mt-1'>Session not found, check the ID</p>
               )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium mb-1'>Team</label>
+              <select
+                required
+                id='playerTeam'
+                className='w-full border border-gray-400 dark:border-gray-700 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-400'
+                value={playerTeam}
+                onChange={(e) => setPlayerTeam(e.target.value)}
+              >
+                <option value=''>-- Select your team --</option>
+                <option value='Back End Developers'>Back End Developers</option>
+                <option value='Front End Developers'>Front End Developers</option>
+                <option value='Quality Assurance'>Quality Assurance</option>
+              </select>
             </div>
             <div>
               <label className='block text-sm font-medium mb-1'>Your Name</label>
@@ -92,9 +114,8 @@ export const JoinGame = () => {
           <div className='flex justify-end mt-6'>
             <button
               type='submit'
-              className={`bg-blue-600 text-white px-6 py-2 rounded font-semibold shadow hover:bg-blue-700 transition ${
-                loading ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              className={`bg-blue-600 text-white px-6 py-2 rounded font-semibold shadow hover:bg-blue-700 transition ${loading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               disabled={loading}
             >
               {loading ? 'Joining...' : 'Join'}

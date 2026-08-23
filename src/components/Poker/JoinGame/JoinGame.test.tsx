@@ -43,7 +43,7 @@ describe('JoinGame component', () => {
   });
 
   it('should be able to join a session', async () => {
-    jest.spyOn(playersService, 'addPlayerToGame').mockResolvedValue(true);
+    jest.spyOn(playersService, 'addPlayerToGame').mockResolvedValue("1");
     jest.spyOn(playersService, 'isCurrentPlayerInGame').mockResolvedValue(false);
     render(<JoinGame />);
     const sessionID = screen.getByPlaceholderText('xyz...');
@@ -69,7 +69,7 @@ describe('JoinGame component', () => {
     const gameId = 'abc';
     jest.spyOn(reactRouter, 'useParams').mockReturnValue({ id: gameId });
     jest.spyOn(gameService, 'getGame').mockResolvedValue({ id: gameId } as Game);
-    jest.spyOn(playersService, 'addPlayerToGame').mockResolvedValue(true);
+    jest.spyOn(playersService, 'addPlayerToGame').mockResolvedValue("1");
     jest.spyOn(playersService, 'isCurrentPlayerInGame').mockResolvedValue(true);
 
     render(<JoinGame />);
@@ -81,7 +81,7 @@ describe('JoinGame component', () => {
     const gameId = 'abc';
     jest.spyOn(reactRouter, 'useParams').mockReturnValue({ id: gameId });
     jest.spyOn(gameService, 'getGame').mockResolvedValue({ id: gameId } as Game);
-    jest.spyOn(playersService, 'addPlayerToGame').mockResolvedValue(true);
+    jest.spyOn(playersService, 'addPlayerToGame').mockResolvedValue("1");
     jest.spyOn(playersService, 'isCurrentPlayerInGame').mockResolvedValue(false);
 
     render(<JoinGame />);

@@ -21,13 +21,16 @@ export const CreateGame = () => {
   const [createdBy, setCreatedBy] = useState(
     localStorage.getItem('recentPlayerName') || uniqueNamesGenerator(userNameConfig),
   );
-  const [gameType, setGameType] = useState(GameType.Fibonacci);
+  const [gameType, setGameType] = useState(GameType.MBOSP);
   const [hasDefaults, setHasDefaults] = useState({ game: true, name: true });
   const [loading, setLoading] = useState(false);
   const [allowMembersToManageSession, setAllowMembersToManageSession] = useState(false);
   const [customOptions, setCustomOptions] = React.useState(Array(15).fill(''));
   const [error, setError] = React.useState(false);
   const { t } = useTranslation();
+  const [creatorTeam, setCreatorTeam] = useState(
+    () => localStorage.getItem('recentCreatorTeam') || '',
+  );
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -49,13 +52,17 @@ export const CreateGame = () => {
       isAllowMembersToManageSession: allowMembersToManageSession,
       cards: gameType === GameType.Custom ? getCustomCards(customOptions) : getCards(gameType),
       createdAt: new Date(),
+      createdByTeam: creatorTeam
     };
-    const newGameId = await addNewGame(game);
-    if (newGameId) {
+    const result = await addNewGame(game);
+    if (result) {
       localStorage.setItem('recentPlayerName', createdBy);
+      localStorage.setItem('recentCreatorTeam', creatorTeam);
+      localStorage.setItem('currentPlayerId', result.playerId);
+
       setLoading(false);
     }
-    history.push(`/game/${newGameId}`);
+    history.push(`/game/${result.gameId}`);
   };
 
   const handleCustomOptionChange = (index: number, value: string) => {
@@ -101,6 +108,21 @@ export const CreateGame = () => {
             />
           </div>
           <div>
+            <label className='block text-sm font-medium mb-1'>Your Team</label>
+            <select
+              required
+              id='creatorTeam'
+              className='w-full border border-gray-400 dark:border-gray-700 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-400'
+              value={creatorTeam}
+              onChange={(e) => setCreatorTeam(e.target.value)}
+            >
+              <option value=''>-- Select your team --</option>
+              <option value='Back End Developers'>Back End Developers</option>
+              <option value='Front End Developers'>Front End Developers</option>
+              <option value='Quality Assurance'>Quality Assurance</option>
+            </select>
+          </div>
+          <div>
             <label className='block text-sm font-medium mb-1'>
               {t('CreateGame.yourNameLabel')}
             </label>
@@ -120,6 +142,7 @@ export const CreateGame = () => {
             </legend>
             <div className='flex flex-col gap-2'>
               {[
+                { type: GameType.MBOSP, label: t('CreateGame.mbOsp') },
                 { type: GameType.Fibonacci, label: t('CreateGame.fibonacci') },
                 { type: GameType.ShortFibonacci, label: t('CreateGame.shortFibonacci') },
                 { type: GameType.TShirt, label: t('CreateGame.tShirt') },
@@ -147,7 +170,7 @@ export const CreateGame = () => {
                   <input
                     key={index}
                     type='text'
-                    maxLength={3}
+                    maxLength={4}
                     className='w-12 border rounded px-2 py-1 text-xs text-center focus:outline-none focus:ring-2 focus:ring-blue-500'
                     value={option}
                     onChange={(event) => handleCustomOptionChange(index, event.target.value)}
@@ -173,9 +196,8 @@ export const CreateGame = () => {
         <div className='flex justify-end mt-6'>
           <button
             type='submit'
-            className={`bg-blue-600 text-white px-6 py-2 rounded font-semibold shadow hover:bg-blue-700 transition ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={`bg-blue-600 text-white px-6 py-2 rounded font-semibold shadow hover:bg-blue-700 transition ${loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             disabled={loading}
             data-testid='loading'
           >

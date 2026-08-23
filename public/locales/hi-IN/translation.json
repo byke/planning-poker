@@ -56,6 +56,7 @@
     "pleaseEnterValues": "कृपया कम से कम दो कस्टम विकल्पों के लिए मान दर्ज करें।",
     "allowMembersToManageSession": "सदस्यों को सत्र प्रबंधित करने की अनुमति दें",
     "creating": "बना रहा है...",
-    "create": "बनाएं"
+    "create": "बनाएं",
+    "days": "Days"
   }
 }

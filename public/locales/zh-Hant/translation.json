@@ -56,6 +56,7 @@
     "pleaseEnterValues": "請至少輸入兩個自訂選項的值。",
     "allowMembersToManageSession": "允許成員管理房間",
     "creating": "建立中...",
-    "create": "建立"
+    "create": "建立",
+    "days": "Days"
   }
 }

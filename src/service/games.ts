@@ -15,17 +15,19 @@ import { Player } from '../types/player';
 import { Status } from '../types/status';
 import { removeGameFromCache, resetPlayers, updatePlayerGames } from './players';
 
-export const addNewGame = async (newGame: NewGame): Promise<string> => {
+export const addNewGame = async (newGame: NewGame): Promise<{ gameId: string; playerId: string }> => {
   const player = {
     name: newGame.createdBy,
     id: ulid(),
     status: Status.NotStarted,
+    team: newGame.createdByTeam,
   };
   const gameData = {
     ...newGame,
     id: ulid(),
     average: 0,
     createdById: player.id,
+    createdByPlayerId: player.id,
     gameStatus: Status.Started,
   };
   await addGameToStore(gameData.id, gameData);
@@ -38,7 +40,7 @@ export const addNewGame = async (newGame: NewGame): Promise<string> => {
     player.id,
   );
 
-  return gameData.id;
+  return { gameId: gameData.id, playerId: player.id };
 };
 
 export const streamGame = (id: string) => {

@@ -50,9 +50,9 @@ describe('games service', () => {
     updatedAt: new Date(),
   };
   const mockPlayers = [
-    { name: 'Jack', id: 'beanstalk', status: Status.Finished, value: 4, emoji: 'smirk' },
-    { name: 'Jill', id: 'hill', status: Status.Started, value: 1, emoji: 'thumbsup' },
-    { name: 'Humpty', id: 'dumpty', status: Status.InProgress, value: 500, emoji: 'egg' },
+    { name: 'Jack', id: 'beanstalk', status: Status.Finished, value: 4, emoji: 'smirk', team: 'Back End Developers' },
+    { name: 'Jill', id: 'hill', status: Status.Started, value: 1, emoji: 'thumbsup', team: 'Back End Developers' },
+    { name: 'Humpty', id: 'dumpty', status: Status.InProgress, value: 500, emoji: 'egg', team: 'Back End Developers' },
   ];
   // This is required because JS is weird with its copying VS referencing. Yes could have just copy-pasted the const, but what's the fun in that
   const finishedPlayers = [{ ...mockPlayers[0] }, { ...mockPlayers[1] }, { ...mockPlayers[2] }];
@@ -71,6 +71,7 @@ describe('games service', () => {
         { value: 3, displayValue: '3', color: 'green' },
       ],
       createdAt: new Date(),
+      createdByTeam: 'Back End Developers',
     };
     const resPlayer = {
       name: fakeGame.createdBy,

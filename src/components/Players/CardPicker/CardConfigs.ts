@@ -79,6 +79,24 @@ export const customCardsTemplate: CardConfig[] = [
   { value: 14, displayValue: '14', color: '#9B59B6' },
 ];
 
+export const daysCards: CardConfig[] = [
+  { value: 0.25, displayValue: '0.25', color: '#e7edf3' },
+  { value: 0.5, displayValue: '0.5', color: '#9EC8FE' },
+  { value: 0.75, displayValue: '0.75', color: '#9EC8FE' },
+  { value: 1, displayValue: '1', color: '#A3DFF2' },
+  { value: 1.25, displayValue: '1.25', color: '#A3DFF2' },
+  { value: 1.5, displayValue: '1.5', color: '#9DD49A' },
+  { value: 1.75, displayValue: '1.75', color: '#9DD49A' },
+  { value: 2, displayValue: '2', color: '#F4DD94' },
+  { value: 2.5, displayValue: '2.5', color: '#F4DD94' },
+  { value: 3, displayValue: '3', color: '#F39893' },
+  { value: 3.5, displayValue: '3.5', color: '#F39893' },
+  { value: 4, displayValue: '4', color: '#D96C6C' },
+  { value: 4.5, displayValue: '4.5', color: '#D96C6C' },
+  { value: 5, displayValue: '5', color: '#9B59B6' },
+  { value: 10, displayValue: '10', color: '#9B59B6' },
+]
+
 export const getCards = (gameType: GameType | undefined): CardConfig[] => {
   switch (gameType) {
     case GameType.Fibonacci:
@@ -89,6 +107,8 @@ export const getCards = (gameType: GameType | undefined): CardConfig[] => {
       return tShirtCards;
     case GameType.TShirtAndNumber:
       return tShirtAndNumbersCards;
+      case GameType.MBOSP:
+      return daysCards;
     case GameType.Custom:
       return customCardsTemplate;
     default:

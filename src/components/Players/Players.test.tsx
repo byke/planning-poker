@@ -20,8 +20,8 @@ describe('Players component', () => {
     gameStatus: Status.InProgress,
   };
   const mockPlayers: Player[] = [
-    { id: 'a1', name: 'SpiderMan', status: Status.InProgress, value: 0 },
-    { id: 'a2', name: 'IronMan', status: Status.Finished, value: 3 },
+    { id: 'a1', name: 'SpiderMan', status: Status.InProgress, value: 0, team: 'Back End Developers' },
+    { id: 'a2', name: 'IronMan', status: Status.Finished, value: 3, team: 'Back End Developers' },
   ];
   const mockCurrentPlayerId = mockPlayers[0].id;
   it('should display all players', () => {

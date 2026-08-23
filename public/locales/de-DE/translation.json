@@ -56,6 +56,7 @@
     "pleaseEnterValues": "Bitte geben Sie Werte für mindestens zwei benutzerdefinierte Optionen ein.",
     "allowMembersToManageSession": "Mitgliedern erlauben, die Sitzung zu verwalten",
     "creating": "Erstelle...",
-    "create": "Erstellen"
+    "create": "Erstellen",
+    "days": "Days"
   }
 }

@@ -56,6 +56,7 @@
     "pleaseEnterValues": "Por favor, ingrese valores para al menos dos opciones personalizadas.",
     "allowMembersToManageSession": "Permitir a los miembros gestionar la sesión",
     "creating": "Creando...",
-    "create": "Crear"
+    "create": "Crear",
+    "days": "Days"
   }
 }

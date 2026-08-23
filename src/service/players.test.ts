@@ -39,6 +39,7 @@ describe('Players service', () => {
     name: 'Mockingbird',
     id: '123-abc',
     status: Status.Started,
+    team: "Back End Developers"
   };
   const mockGame = {
     id: 'game-123',
@@ -369,7 +370,7 @@ describe('Players service', () => {
     it('should return false if the game does not exist', async () => {
       jest.spyOn(fb, 'getGameFromStore').mockResolvedValueOnce(undefined);
 
-      const res = await addPlayerToGame('foo', 'bar');
+      const res = await addPlayerToGame('foo', 'bar', 'Back End Developers');
 
       expect(res).toBe(false);
     });
@@ -400,7 +401,7 @@ describe('Players service', () => {
       const cacheSpy = jest.spyOn(storage, 'updatePlayerGamesInCache');
       const dbSpy = jest.spyOn(fb, 'addPlayerToGameInStore');
 
-      const res = await addPlayerToGame(newGame.id, fakeName);
+      const res = await addPlayerToGame(newGame.id, fakeName, 'Back End Developers');
 
       expect(cacheSpy).toHaveBeenCalledWith(newList);
       expect(dbSpy).toHaveBeenCalledWith(newGame.id, expect.objectContaining(expected));
@@ -411,9 +412,9 @@ describe('Players service', () => {
   describe("reset players' statuses", () => {
     it('should update all players for a game in the DB', async () => {
       const fakePlayers = [
-        { id: 'one', name: 'potato', status: Status.Finished, value: 1 },
-        { id: 'two', name: 'pea', status: Status.InProgress, value: 2 },
-        { id: 'three', name: 'carrot', status: Status.Started, value: 3 },
+        { id: 'one', name: 'potato', status: Status.Finished, value: 1, team: 'Back End Developers' },
+        { id: 'two', name: 'pea', status: Status.InProgress, value: 2, team: 'Back End Developers' },
+        { id: 'three', name: 'carrot', status: Status.Started, value: 3, team: 'Back End Developers' },
       ];
       const expectedPlayers = [
         { id: 'one', name: 'potato', status: Status.NotStarted, value: 0 },

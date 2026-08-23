@@ -56,6 +56,7 @@
     "pleaseEnterValues": "Please enter values for at least two custom option.",
     "allowMembersToManageSession": "Allow members to manage session",
     "creating": "Creating...",
-    "create": "Create"
+    "create": "Create",
+    "days": "Days"
   }
 }

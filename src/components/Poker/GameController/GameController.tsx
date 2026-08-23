@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import confetti from 'canvas-confetti';
 import { AlertDialog } from '../../../components/AlertDialog/AlertDialog';
 import {
   finishGame,
@@ -27,6 +28,8 @@ interface GameControllerProps {
   currentPlayerId: string;
 }
 
+const TEAMS = ['Back End Developers', 'Front End Developers', 'Quality Assurance'];
+
 export const GameController: React.FC<GameControllerProps> = ({
   game,
   players,
@@ -45,12 +48,46 @@ export const GameController: React.FC<GameControllerProps> = ({
       players.every((p: Player) => p.status === Status.Finished)
     ) {
       finishGame(game.id);
+      triggerConfettiForEqualTeams(players);
     }
   }, [
     game.autoReveal,
     game,
     JSON.stringify(players.map((p) => ({ id: p.id, value: p.value, status: p.status }))),
   ]);
+
+  const triggerConfettiForEqualTeams = (playersData: Player[]) => {
+    TEAMS.forEach((team) => {
+      const teamPlayers = playersData.filter((p) => p.team === team);
+      if (teamPlayers.length > 1) {
+        const submittedPlayers = teamPlayers.filter(
+          (p) => p.value !== undefined && p.value !== null
+        );
+
+        if (submittedPlayers.length === teamPlayers.length) {
+          const scores = submittedPlayers.map((p) => p.value);
+          const uniqueScores = new Set(scores);
+
+          if (uniqueScores.size === 1) {
+            const panelId = `team-panel-${team.replace(/\s+/g, '-')}`;
+            const element = document.getElementById(panelId);
+
+            if (element) {
+              const rect = element.getBoundingClientRect();
+              confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: {
+                  x: (rect.left + rect.width / 2) / window.innerWidth,
+                  y: (rect.top + rect.height / 2) / window.innerHeight,
+                },
+              });
+            }
+          }
+        }
+      }
+    });
+  };
 
   const onAutoReveal = (value: boolean) => {
     updateGame(game.id, { autoReveal: value });
@@ -70,9 +107,15 @@ export const GameController: React.FC<GameControllerProps> = ({
   };
 
   const leaveGame = () => history.push(`/`);
+
   const handleRemoveGame = async (id: string) => {
     await removeGame(id);
     window.location.href = '/';
+  };
+
+  const handleReveal = async () => {
+    await finishGame(game.id);
+    triggerConfettiForEqualTeams(players);
   };
 
   const isMod = isModerator(game.createdById, currentPlayerId, game.isAllowMembersToManageSession);
@@ -97,7 +140,6 @@ export const GameController: React.FC<GameControllerProps> = ({
     <div className='flex flex-col items-center w-full px-2'>
       <div className='w-full max-w-md bg-gray-200 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg my-5'>
         {/* Card Header */}
-
         <div className='flex items-center justify-between px-3 py-1 border-b border-gray-400 dark:border-gray-600'>
           <div className='text-lg font-semibold truncate flex-grow'>{game.name}</div>
           <Timer timerProps={timerProps} onTimerUpdate={(props) => onUpdatedTimerProps(props)} />
@@ -123,7 +165,7 @@ export const GameController: React.FC<GameControllerProps> = ({
           {isMod && (
             <>
               <ControllerButton
-                onClick={() => finishGame(game.id)}
+                onClick={handleReveal}
                 icon={<EyeSVG className='h-9 w-9 text-green-500' />}
                 label={t('GameController.reveal')}
                 className='hover:bg-green-200'
@@ -247,7 +289,6 @@ interface AutoRevealProps {
 
 export const AutoReveal: React.FC<AutoRevealProps> = ({ autoReveal, onAutoReveal }) => {
   const { t } = useTranslation();
-
   return (
     <div className='flex flex-col items-center'>
       <label className='flex items-center cursor-pointer'>
@@ -289,19 +330,12 @@ const AverageComponent: React.FC<{ game: Game; players: Player[] }> = ({ game, p
   const NOT_APPLICABLE = 'N/A';
   const EMPTY = '-';
   const canShowAverage = gameType !== GameType.TShirt && gameType !== GameType.TShirtAndNumber;
-
   if (!canShowAverage) {
     return null;
   }
-
   const { t } = useTranslation();
   const gameAverage = getAverage(game, players);
   let average = game.gameStatus === Status.Finished && gameAverage ? gameAverage.toFixed(2) : EMPTY;
-
-  // if (!areAllFinishedPlayersDisplayValuesNumeric(game, players)) {
-  //   average = NOT_APPLICABLE;
-  // }
-
   return (
     <>
       <div className='mx-2 h-6 border-l border-gray-400 dark:border-gray-600' />
@@ -333,7 +367,6 @@ export function areAllFinishedPlayersDisplayValuesNumeric(game: Game, players: P
         game.gameType === GameType.Custom
           ? Number(game.cards.find((card) => card.value === player.value)?.displayValue)
           : player.value;
-
       if (!value) return false;
       const num = typeof value === 'number' ? value : Number(value);
       return !isNaN(num);
@@ -349,7 +382,6 @@ export const getAverage = (game: Game, players: Player[]): number => {
       game.gameType === GameType.Custom
         ? Number(cards.find((card) => card.value === player.value)?.displayValue)
         : player.value;
-
     if (
       player.status === Status.Finished &&
       value !== undefined &&

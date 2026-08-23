@@ -39,7 +39,7 @@ describe('GameController component', () => {
   };
   const mockCurrentPlayerId = 'abc';
   const mockPlayers: Player[] = [
-    { id: 'abc', name: 'Player1', value: 2, emoji: '😀', status: Status.InProgress },
+    { id: 'abc', name: 'Player1', value: 2, emoji: '😀', status: Status.InProgress, team: 'Back End Developers' },
   ];
 
   it('should display game name', () => {
@@ -184,8 +184,8 @@ describe('GameController component', () => {
     });
     it('should call finish game when auto reveal is true and all players has voted', () => {
       const mockPlayersWithVotes: Player[] = [
-        { id: 'abc', name: 'Player1', value: 2, emoji: '😀', status: Status.Finished },
-        { id: 'def', name: 'Player2', value: 3, emoji: '😃', status: Status.Finished },
+        { id: 'abc', name: 'Player1', value: 2, emoji: '😀', status: Status.Finished, team: 'Back End Developers' },
+        { id: 'def', name: 'Player2', value: 3, emoji: '😃', status: Status.Finished, team: 'Back End Developers' },
       ];
       const mockGameWihAutoReveal: Game = {
         ...mockGame,
@@ -250,8 +250,8 @@ describe('GameController component', () => {
 
     it('shows as average if one finished players have numeric values', () => {
       const playersWithNonNumeric: Player[] = [
-        { id: 'abc', name: 'Player1', value: 1, emoji: '☕', status: Status.Finished },
-        { id: 'def', name: 'Player2', value: 2, emoji: '😀', status: Status.Finished },
+        { id: 'abc', name: 'Player1', value: 1, emoji: '☕', status: Status.Finished, team: 'Back End Developers' },
+        { id: 'def', name: 'Player2', value: 2, emoji: '😀', status: Status.Finished, team: 'Back End Developers' },
       ];
       const customCards: CardConfig[] = [
         { value: 1, displayValue: '1', color: 'red' },
@@ -274,8 +274,8 @@ describe('GameController component', () => {
 
     it('shows average value and info icon when all finished players have numeric values and game is finished', () => {
       const finishedPlayers: Player[] = [
-        { id: 'abc', name: 'Player1', value: 1, emoji: '😀', status: Status.Finished },
-        { id: 'def', name: 'Player2', value: 2, emoji: '😃', status: Status.Finished },
+        { id: 'abc', name: 'Player1', value: 1, emoji: '😀', status: Status.Finished, team: 'Back End Developers' },
+        { id: 'def', name: 'Player2', value: 2, emoji: '😃', status: Status.Finished, team: 'Back End Developers' },
       ];
       const customCards: CardConfig[] = [
         { value: 1, displayValue: '2', color: 'red' },
@@ -306,8 +306,8 @@ describe('GameController component', () => {
         { value: 2, displayValue: '2', color: 'blue' },
       ];
       const players: Player[] = [
-        { id: '1', name: 'A', value: 1, emoji: '', status: Status.Finished },
-        { id: '2', name: 'B', value: 2, emoji: '', status: Status.Finished },
+        { id: '1', name: 'A', value: 1, emoji: '', status: Status.Finished, team: 'Back End Developers' },
+        { id: '2', name: 'B', value: 2, emoji: '', status: Status.Finished, team: 'Back End Developers' },
       ];
       expect(
         areAllFinishedPlayersDisplayValuesNumeric(
@@ -323,8 +323,8 @@ describe('GameController component', () => {
         { value: 2, displayValue: 'coffee', color: 'brown' },
       ];
       const players: Player[] = [
-        { id: '1', name: 'A', value: 1, emoji: '', status: Status.Finished },
-        { id: '2', name: 'B', value: 2, emoji: '', status: Status.Finished },
+        { id: '1', name: 'A', value: 1, emoji: '', status: Status.Finished, team: 'Back End Developers' },
+        { id: '2', name: 'B', value: 2, emoji: '', status: Status.Finished, team: 'Back End Developers' },
       ];
       expect(
         areAllFinishedPlayersDisplayValuesNumeric(
@@ -340,8 +340,8 @@ describe('GameController component', () => {
         { value: 2, displayValue: '2', color: 'blue' },
       ];
       const players: Player[] = [
-        { id: '1', name: 'A', value: 1, emoji: '', status: Status.Finished },
-        { id: '2', name: 'B', value: 2, emoji: '', status: Status.Finished },
+        { id: '1', name: 'A', value: 1, emoji: '', status: Status.Finished, team: 'Back End Developers' },
+        { id: '2', name: 'B', value: 2, emoji: '', status: Status.Finished, team: 'Back End Developers' },
       ];
       expect(
         areAllFinishedPlayersDisplayValuesNumeric(
@@ -357,8 +357,8 @@ describe('GameController component', () => {
         { value: 2, displayValue: '2', color: 'blue' },
       ];
       const players: Player[] = [
-        { id: '1', name: 'A', value: 1, emoji: '', status: Status.Finished },
-        { id: '2', name: 'B', value: 2, emoji: '', status: Status.Finished },
+        { id: '1', name: 'A', value: 1, emoji: '', status: Status.Finished, team: 'Back End Developers' },
+        { id: '2', name: 'B', value: 2, emoji: '', status: Status.Finished, team: 'Back End Developers' },
       ];
       expect(
         areAllFinishedPlayersDisplayValuesNumeric(
@@ -369,9 +369,9 @@ describe('GameController component', () => {
     });
     it('should provide the average of players votes', () => {
       const players: Player[] = [
-        { id: '1', name: 'A', value: 4, emoji: '', status: Status.Finished },
-        { id: '2', name: 'B', value: 1, emoji: '', status: Status.Finished },
-        { id: 'dumpty', name: 'Humpty', value: 2, emoji: 'egg', status: Status.Finished },
+        { id: '1', name: 'A', value: 4, emoji: '', status: Status.Finished, team: 'Back End Developers' },
+        { id: '2', name: 'B', value: 1, emoji: '', status: Status.Finished, team: 'Back End Developers' },
+        { id: 'dumpty', name: 'Humpty', value: 2, emoji: 'egg', status: Status.Finished, team: 'Back End Developers' },
       ];
       const expected = (4 + 1 + 2) / 3;
 
@@ -382,9 +382,9 @@ describe('GameController component', () => {
 
     it('should not calculate players who have not finished', () => {
       const players: Player[] = [
-        { id: '1', name: 'A', value: 4, emoji: '', status: Status.Finished },
-        { id: '2', name: 'B', value: 1, emoji: '', status: Status.Finished },
-        { id: 'dumpty', name: 'Humpty', value: 2, emoji: 'egg', status: Status.InProgress },
+        { id: '1', name: 'A', value: 4, emoji: '', status: Status.Finished, team: 'Back End Developers' },
+        { id: '2', name: 'B', value: 1, emoji: '', status: Status.Finished, team: 'Back End Developers' },
+        { id: 'dumpty', name: 'Humpty', value: 2, emoji: 'egg', status: Status.InProgress, team: 'Back End Developers' },
       ];
       const expected = (4 + 1) / 2;
       const res = getAverage(mockGame, players);

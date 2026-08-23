@@ -53,6 +53,7 @@
     "pleaseEnterValues": "Veuillez entrer des valeurs pour au moins deux options personnalisées.",
     "allowMembersToManageSession": "Autoriser les membres à gérer la session",
     "creating": "Création...",
-    "create": "Créer"
+    "create": "Créer",
+    "days": "Days"
   }
 }

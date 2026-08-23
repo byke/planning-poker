@@ -21,7 +21,7 @@ describe('PlayerCard component', () => {
     createdById: 'abc',
     gameStatus: Status.InProgress,
   };
-  const mockPlayer: Player = { id: 'a1', name: 'SpiderMan', status: Status.InProgress, value: 0 };
+  const mockPlayer: Player = { id: 'a1', name: 'SpiderMan', status: Status.InProgress, value: 0, team: 'Back End Developers' };
   let mockCurrentPlayerId = mockPlayer.id;
   it('should display Player name', () => {
     render(
