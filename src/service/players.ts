@@ -97,18 +97,18 @@ export const removeGameFromCache = (gameId: string) => {
 
 export const addPlayerToGame = async (gameId: string, playerName: string, playerTeam: string): Promise<string> => {
   const joiningGame = await getGameFromStore(gameId);
-  
+
   if (!joiningGame) {
     console.log('Game not found');
     return '';
   }
-  
+
   const newPlayer = { name: playerName, id: ulid(), status: Status.NotStarted, team: playerTeam };
-  
+
   updatePlayerGames(joiningGame.id, joiningGame.name, joiningGame.createdBy, joiningGame.createdById, newPlayer.id);
-  
+
   await addPlayerToGameInStore(gameId, newPlayer);
-  
+
   return newPlayer.id;
 };
 
@@ -119,7 +119,7 @@ export const resetPlayers = async (gameId: string) => {
     const updatedPlayer: Player = {
       ...player,
       status: Status.NotStarted,
-      value: 0,
+      value: null,
     };
     await updatePlayerInStore(gameId, updatedPlayer);
   });

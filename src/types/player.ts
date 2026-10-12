@@ -2,10 +2,10 @@ import { Status } from './status';
 
 export interface Player {
   name: string;
-  team: string,
+  team: string;
   id: string;
   status: Status;
-  value?: number;
+  value?: number | null;
   emoji?: string;
 }
 

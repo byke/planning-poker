@@ -66,7 +66,7 @@ export const GameController: React.FC<GameControllerProps> = ({
   const triggerConfettiForEqualTeams = (playersData: Player[]) => {
     TEAMS.forEach((team) => {
       const teamPlayers = playersData.filter((p) => p.team === team);
-
+      
       // Only trigger if team has at least 2 members
       if (teamPlayers.length < 2) return;
 
@@ -74,7 +74,7 @@ export const GameController: React.FC<GameControllerProps> = ({
       const submittedPlayers = teamPlayers.filter(
         (p) => p.value !== undefined && p.value !== null
       );
-
+     
       // MUST have votes from everyone in the team
       if (submittedPlayers.length === 0) return; // Nobody voted - don't show confetti
       if (submittedPlayers.length !== teamPlayers.length) return; // Not everyone voted - don't show confetti
@@ -82,7 +82,7 @@ export const GameController: React.FC<GameControllerProps> = ({
       // Check all submitted votes are identical
       const scores = submittedPlayers.map((p) => p.value);
       const uniqueScores = new Set(scores);
-
+      
       if (uniqueScores.size !== 1) return; // Scores are different - don't show confetti
 
       // Only if we get here should confetti trigger
@@ -397,6 +397,7 @@ export const getAverage = (game: Game, players: Player[]): number => {
     if (
       player.status === Status.Finished &&
       value !== undefined &&
+      value !== null &&
       !isNaN(value) &&
       value &&
       value >= 0
