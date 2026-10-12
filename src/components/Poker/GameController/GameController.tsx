@@ -39,6 +39,14 @@ export const GameController: React.FC<GameControllerProps> = ({
   const { t } = useTranslation();
   const [showCopiedMessage, setShowCopiedMessage] = useState(false);
 
+  // Trigger confetti when game is revealed (for all participants)
+  useEffect(() => {
+    if (game.gameStatus === Status.Finished) {
+      triggerConfettiForEqualTeams(players);
+    }
+  }, [game.gameStatus, players]);
+
+  // Auto-reveal when all players finish
   useEffect(() => {
     if (
       game.autoReveal &&
@@ -48,7 +56,6 @@ export const GameController: React.FC<GameControllerProps> = ({
       players.every((p: Player) => p.status === Status.Finished)
     ) {
       finishGame(game.id);
-      triggerConfettiForEqualTeams(players);
     }
   }, [
     game.autoReveal,
@@ -64,7 +71,8 @@ export const GameController: React.FC<GameControllerProps> = ({
           (p) => p.value !== undefined && p.value !== null
         );
 
-        if (submittedPlayers.length === teamPlayers.length) {
+        // Bug fix: Check that at least one person voted AND all team members voted
+        if (submittedPlayers.length > 0 && submittedPlayers.length === teamPlayers.length) {
           const scores = submittedPlayers.map((p) => p.value);
           const uniqueScores = new Set(scores);
 
@@ -115,7 +123,7 @@ export const GameController: React.FC<GameControllerProps> = ({
 
   const handleReveal = async () => {
     await finishGame(game.id);
-    triggerConfettiForEqualTeams(players);
+    // Confetti will be triggered by the useEffect watching game.gameStatus
   };
 
   const isMod = isModerator(game.createdById, currentPlayerId, game.isAllowMembersToManageSession);
@@ -232,7 +240,7 @@ export const GameController: React.FC<GameControllerProps> = ({
       {showCopiedMessage && (
         <div className='fixed top-6 right-6 z-50'>
           <div
-            className='bg-green-100 border border-green-200  text-gray-800 opacity-85 px-4 py-3 text-xs rounded shadow'
+            className='bg-green-100 border border-green-200 text-gray-800 opacity-85 px-4 py-3 text-xs rounded shadow'
             role='alert'
           >
             <span className='block font-bold'>{t('GameController.inviteLinkCopied')}!</span>
@@ -298,15 +306,13 @@ export const AutoReveal: React.FC<AutoRevealProps> = ({ autoReveal, onAutoReveal
           role='switch'
           aria-checked={autoReveal}
           onClick={() => onAutoReveal(!autoReveal)}
-          className={`relative inline-flex h-4 w-8 items-center rounded-full transition-colors focus:outline-none ${
-            autoReveal ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
-          }`}
+          className={`relative inline-flex h-4 w-8 items-center rounded-full transition-colors focus:outline-none ${autoReveal ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
+            }`}
           style={{ minWidth: '2rem' }}
         >
           <span
-            className={`inline-block h-3 w-3 cursor-pointer transform rounded-full bg-white shadow transition-transform ${
-              autoReveal ? 'translate-x-4' : 'translate-x-1'
-            }`}
+            className={`inline-block h-3 w-3 cursor-pointer transform rounded-full bg-white shadow transition-transform ${autoReveal ? 'translate-x-4' : 'translate-x-1'
+              }`}
           />
         </button>
       </label>
