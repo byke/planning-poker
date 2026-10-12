@@ -52,7 +52,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ game, player, currentPla
   );
 };
 
-const getCardColor = (game: Game, value: number | undefined): string => {
+const getCardColor = (game: Game, value: number | null | undefined): string => {
   if (game.gameStatus == Status.Finished) {
     const card = getCards(game.gameType).find((card) => card.value === value);
     return card ? card.color : '';
@@ -77,7 +77,7 @@ const getCardValue = (player: Player, game: Game) => {
   return '';
 };
 
-const getCardDisplayValue = (game: Game, cardValue: number | undefined): string => {
+const getCardDisplayValue = (game: Game, cardValue: number | null | undefined): string => {
   const cards = game.cards?.length > 0 ? game.cards : getCards(game.gameType);
   return (
     cards.find((card) => card.value === cardValue)?.displayValue || cardValue?.toString() || ''
