@@ -66,33 +66,39 @@ export const GameController: React.FC<GameControllerProps> = ({
   const triggerConfettiForEqualTeams = (playersData: Player[]) => {
     TEAMS.forEach((team) => {
       const teamPlayers = playersData.filter((p) => p.team === team);
-      if (teamPlayers.length > 1) {
-        const submittedPlayers = teamPlayers.filter(
-          (p) => p.value !== undefined && p.value !== null
-        );
 
-        // Bug fix: Check that at least one person voted AND all team members voted
-        if (submittedPlayers.length > 0 && submittedPlayers.length === teamPlayers.length) {
-          const scores = submittedPlayers.map((p) => p.value);
-          const uniqueScores = new Set(scores);
+      // Only trigger if team has at least 2 members
+      if (teamPlayers.length < 2) return;
 
-          if (uniqueScores.size === 1) {
-            const panelId = `team-panel-${team.replace(/\s+/g, '-')}`;
-            const element = document.getElementById(panelId);
+      // Filter players who have submitted a vote (not null/undefined)
+      const submittedPlayers = teamPlayers.filter(
+        (p) => p.value !== undefined && p.value !== null
+      );
 
-            if (element) {
-              const rect = element.getBoundingClientRect();
-              confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: {
-                  x: (rect.left + rect.width / 2) / window.innerWidth,
-                  y: (rect.top + rect.height / 2) / window.innerHeight,
-                },
-              });
-            }
-          }
-        }
+      // MUST have votes from everyone in the team
+      if (submittedPlayers.length === 0) return; // Nobody voted - don't show confetti
+      if (submittedPlayers.length !== teamPlayers.length) return; // Not everyone voted - don't show confetti
+
+      // Check all submitted votes are identical
+      const scores = submittedPlayers.map((p) => p.value);
+      const uniqueScores = new Set(scores);
+
+      if (uniqueScores.size !== 1) return; // Scores are different - don't show confetti
+
+      // Only if we get here should confetti trigger
+      const panelId = `team-panel-${team.replace(/\s+/g, '-')}`;
+      const element = document.getElementById(panelId);
+
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: {
+            x: (rect.left + rect.width / 2) / window.innerWidth,
+            y: (rect.top + rect.height / 2) / window.innerHeight,
+          },
+        });
       }
     });
   };
