@@ -6,7 +6,6 @@ import { addPlayerToGame, isCurrentPlayerInGame } from '../../../service/players
 export const JoinGame = () => {
   const history = useHistory();
   let { id } = useParams<{ id: string }>();
-
   const [joinGameId, setJoinGameId] = useState(id);
   const [playerName, setPlayerName] = useState(
     () => localStorage.getItem('recentPlayerName') || '',
@@ -19,22 +18,38 @@ export const JoinGame = () => {
   );
 
   useEffect(() => {
+    let isMounted = true; // Track if component is mounted
+
     async function fetchData() {
       if (joinGameId) {
         if (await getGame(joinGameId)) {
-          setIsGameFound(true);
+          if (isMounted) {
+            setIsGameFound(true);
+          }
           if (await isCurrentPlayerInGame(joinGameId)) {
-            history.push(`/game/${joinGameId}`);
+            if (isMounted) {
+              history.push(`/game/${joinGameId}`);
+            }
           }
         } else {
-          setShowNotExistMessage(true);
-          setTimeout(() => {
-            history.push('/');
-          }, 5000);
+          if (isMounted) {
+            setShowNotExistMessage(true);
+            setTimeout(() => {
+              if (isMounted) {
+                history.push('/');
+              }
+            }, 5000);
+          }
         }
       }
     }
+
     fetchData();
+
+    // Cleanup function: mark component as unmounted
+    return () => {
+      isMounted = false;
+    };
   }, [joinGameId, history]);
 
   const handleSubmit = async (event: FormEvent) => {
@@ -47,7 +62,7 @@ export const JoinGame = () => {
     setLoading(true);
     if (joinGameId) {
       localStorage.setItem('recentPlayerName', playerName);
-      localStorage.setItem('recentPlayerTeam', playerTeam)
+      localStorage.setItem('recentPlayerTeam', playerTeam);
 
       const playerIdRes = await addPlayerToGame(gameId, playerName, playerTeam);
       if (playerIdRes) {
@@ -56,7 +71,6 @@ export const JoinGame = () => {
       } else {
         setIsGameFound(false);
       }
-
       setLoading(false);
     }
   };
@@ -64,7 +78,7 @@ export const JoinGame = () => {
   return (
     <div className='w-full'>
       <form onSubmit={handleSubmit} className='w-full flex justify-center'>
-        <div className='w-full max-w-lg  border border-gray-200 dark:border-gray-800 rounded-xl shadow-lg p-6'>
+        <div className='w-full max-w-lg border border-gray-200 dark:border-gray-800 rounded-xl shadow-lg p-6'>
           <h2 className='text-2xl font-bold mb-4 text-center'>Join a Session</h2>
           <div className='flex flex-col gap-4'>
             <div>
