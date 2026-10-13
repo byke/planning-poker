@@ -25,7 +25,7 @@ export const removePlayer = async (gameId: string, playerId: string) => {
     removePlayerFromGameInStore(gameId, playerId);
   }
 };
-export const updatePlayerValue = async (gameId: string, playerId: string, value: number, randomEmoji: string) => {
+export const updatePlayerValue = async (gameId: string, playerId: string, value: number | null, randomEmoji: string) => {
   const player = await getPlayerFromStore(gameId, playerId);
 
   if (player) {

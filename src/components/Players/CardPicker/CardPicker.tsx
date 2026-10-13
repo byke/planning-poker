@@ -16,9 +16,17 @@ interface CardPickerProps {
 export const CardPicker: React.FC<CardPickerProps> = ({ game, players, currentPlayerId }) => {
   const { t } = useTranslation();
   const [randomEmoji, setRandomEmoji] = useState(getRandomEmoji);
+
   const playPlayer = (gameId: string, playerId: string, card: CardConfig) => {
     if (game.gameStatus !== Status.Finished) {
       updatePlayerValue(gameId, playerId, card.value, randomEmoji);
+    }
+  };
+
+  // Handle reset card click
+  const handleReset = () => {
+    if (game.gameStatus !== Status.Finished) {
+      updatePlayerValue(game.id, currentPlayerId, null, randomEmoji);
     }
   };
 
@@ -29,6 +37,7 @@ export const CardPicker: React.FC<CardPickerProps> = ({ game, players, currentPl
   }, [game.gameStatus]);
 
   const cards = game.cards?.length ? game.cards : getCards(game.gameType);
+  const currentPlayerValue = players.find((p) => p.id === currentPlayerId)?.value;
 
   return (
     <div className='w-full max-w-full animate-fade-in-down'>
@@ -38,13 +47,10 @@ export const CardPicker: React.FC<CardPickerProps> = ({ game, players, currentPl
           : t('CardPicker.SessionNotReadyForVotingWaitForModeratorToStart')}
       </div>
       <div className='flex flex-wrap justify-center gap-6 py-4 '>
-        {cards.map((card: CardConfig, index) => {
-          const isSelected = players.find((p) => p.id === currentPlayerId)?.value === card.value;
-          return (
-            <div
-              key={card.value}
-              id={`card-${card.displayValue}`}
-              className={`
+        {/* Reset Card (🤔) */}
+        <div
+          onClick={handleReset}
+          className={`
               cursor-pointer select-none transition-all duration-300
               rounded shadow-md border
               border-gray-300
@@ -55,17 +61,46 @@ export const CardPicker: React.FC<CardPickerProps> = ({ game, players, currentPl
               w-15 h-23
               md:w-20 md:h-30
               sm:w-15 sm:h-23
-              ${
-                isSelected
+              ${currentPlayerValue === null || currentPlayerValue === undefined
+              ? 'border-dashed border-2 border-gray-800 z-10 shadow-lg scale-115'
+              : 'shadow-md scale-100'
+            }
+            ${game.gameStatus === Status.Finished
+              ? 'pointer-events-none opacity-50 cursor-not-allowed'
+              : ''
+            }
+          `}
+        >
+          <span className='flex flex-col justify-center h-full text-4xl'>🤔</span>
+        </div>
+
+        {/* Regular Cards */}
+        {cards.map((card: CardConfig, index) => {
+          const isSelected = players.find((p) => p.id === currentPlayerId)?.value === card.value;
+          return (
+            <div
+              key={card.value}
+              id={`card-${card.displayValue}`}
+              className={`
+                cursor-pointer select-none transition-all duration-300
+                rounded shadow-md border
+                border-gray-300
+                flex flex-col items-center justify-center
+                bg-white
+                text-gray-800
+                hover:scale-115
+                w-15 h-23
+                md:w-20 md:h-30
+                sm:w-15 sm:h-23
+                ${isSelected
                   ? 'border-dashed border-2 border-gray-800 z-10 shadow-lg scale-115'
                   : 'shadow-md scale-100'
-              }
-              ${
-                game.gameStatus === Status.Finished
+                }
+                ${game.gameStatus === Status.Finished
                   ? 'pointer-events-none opacity-50 cursor-not-allowed'
                   : ''
-              }
-            `}
+                }
+              `}
               style={{
                 backgroundColor: card.color,
               }}

@@ -18,13 +18,13 @@ export const Players: React.FC<PlayersProps> = ({ game, players, currentPlayerId
   }, {} as Record<string, Player[]>);
 
   return (
-    <div className='pt-8 px-4'>
+    <div className='pt-5 px-4'>
       <div className='flex flex-row justify-center gap-6 flex-wrap'>
         {TEAMS.map((team) => (
           <div
             key={team}
             id={`team-panel-${team.replace(/\s+/g, '-')}`}
-            className='border border-gray-300 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-800 flex-1 min-w-80 max-w-96'
+            className='border border-gray-300 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-800 flex-1 min-w-80 max-w-120'
           >
             <h3 className='text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300'>
               {team}

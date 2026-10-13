@@ -156,7 +156,7 @@ export const GameController: React.FC<GameControllerProps> = ({
         {/* Card Header */}
         <div className='flex items-center justify-between px-3 py-1 border-b border-gray-400 dark:border-gray-600'>
           <div className='text-lg font-semibold truncate flex-grow'>{game.name}</div>
-          <Timer timerProps={timerProps} onTimerUpdate={(props) => onUpdatedTimerProps(props)} />
+          {/* <Timer timerProps={timerProps} onTimerUpdate={(props) => onUpdatedTimerProps(props)} /> */}
           <div className='mx-2 h-6 border-l border-gray-400 dark:border-gray-600' />
           <span className='text-sm font-medium'>
             {game.gameStatus} {getGameStatusIcon(game.gameStatus)}

@@ -17,7 +17,7 @@ const userNameConfig: Config = {
 
 export const CreateGame = () => {
   const history = useHistory();
-  const [gameName, setGameName] = useState('Estimating session');
+  const [gameName, setGameName] = useState('Estimating');
   const [createdBy, setCreatedBy] = useState(
     localStorage.getItem('recentPlayerName') || uniqueNamesGenerator(userNameConfig),
   );

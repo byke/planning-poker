@@ -18,7 +18,7 @@ export const GameArea: React.FC<GameAreaProps> = ({ game, players, currentPlayer
       <div className='flex flex-col lg:flex-row w-full gap-4 p-4 min-h-[60%] overflow-auto'>
         
         {/* Left Column: GameController - Fixed Width */}
-        <div className='w-full lg:w-120 flex-shrink-0'>
+        <div className='w-full lg:w-91 flex-shrink-0'>
           <GameController game={game} players={players} currentPlayerId={currentPlayerId} />
         </div>
 

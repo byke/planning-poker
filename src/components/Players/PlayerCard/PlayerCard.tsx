@@ -20,7 +20,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ game, player, currentPla
 
   return (
     <div
-      className='rounded shadow-lg w-25 bg-gray-200 dark:bg-gray-800 border-gray-300 dark:border-gray-600 border mb-2 m-3'
+      className='rounded shadow-lg w-25 bg-gray-200 dark:bg-gray-800 border-gray-300 dark:border-gray-600 border mb-5 m-2'
       style={{
         backgroundColor: getCardColor(game, player.value),
       }}
@@ -62,18 +62,31 @@ const getCardColor = (game: Game, value: number | null | undefined): string => {
 
 const getCardValue = (player: Player, game: Game) => {
   if (game.gameStatus !== Status.Finished) {
-    return player.status === Status.Finished ? '👍' : '🤔';
+    // Before game is revealed:
+    // Show 👍 only if player has selected a value (not null/undefined)
+    // Show 🤔 if player hasn't selected or has reset their selection
+    if (player.status === Status.Finished && player.value !== null && player.value !== undefined) {
+      return '👍';
+    }
+    return '🤔';
   }
 
   if (game.gameStatus === Status.Finished) {
     if (player.status === Status.Finished) {
-      if (player.value && player.value === -1) {
+      // If value is null, show thinking emoji (player reset their selection)
+      if (player.value === null || player.value === undefined) {
+        return '🤔';
+      }
+
+      if (player.value === -1) {
         return player.emoji || '☕'; // coffee emoji
       }
+
       return getCardDisplayValue(game, player.value);
     }
     return '🤔';
   }
+
   return '';
 };
 
