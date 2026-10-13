@@ -47,7 +47,7 @@ export const RecentGames = () => {
   return (
     <div className='border border-gray-400 rounded-md shadow-sm'>
       <div className='text-center -mt-5 mx-auto w-[95%] border-2 bg-white dark:bg-gray-800 border-gray-400 rounded-2xl flex items-center justify-center px-3 py-1'>
-        <h6 className='text-lg font-medium  truncate'>Recent Session</h6>
+        <h6 className='text-lg font-medium truncate'>Recent Session</h6>
       </div>
       <div className='p-4'>
         {isEmptyRecentGames() && <p className='text-sm'>No recent sessions found</p>}
@@ -59,18 +59,18 @@ export const RecentGames = () => {
                   <th className='sticky top-0 z-10 bg-gray-50 dark:bg-gray-800 px-6 py-3 text-left text-xs font-bold tracking-wider'>
                     Name
                   </th>
-                  <th className='sticky top-0 z-10 bg-gray-50 dark:bg-gray-800 px-6 py-3 text-left text-xs font-bold  tracking-wider'>
+                  <th className='sticky top-0 z-10 bg-gray-50 dark:bg-gray-800 px-6 py-3 text-left text-xs font-bold tracking-wider'>
                     Created By
                   </th>
-                  <th className='sticky top-0 z-10 bg-gray-50 dark:bg-gray-800 px-6 py-3 text-left text-xs font-medium  tracking-wider'></th>
+                  <th className='sticky top-0 z-10 bg-gray-50 dark:bg-gray-800 px-6 py-3 text-left text-xs font-medium tracking-wider'></th>
                 </tr>
               </thead>
               <tbody className=''>
                 {recentGames.map(
-                  (recentGame) =>
+                  (recentGame, index) =>
                     recentGame.name && (
                       <tr
-                        key={recentGame.id}
+                        key={`${recentGame.id}-${index}`}
                         className='hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer border-t border-gray-200'
                         onClick={() => history.push(`/game/${recentGame.id}`)}
                       >
