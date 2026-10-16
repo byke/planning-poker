@@ -11,9 +11,10 @@ interface PlayerCardProps {
   game: Game;
   player: Player;
   currentPlayerId: string;
+  resetEmoji: string;
 }
 
-export const PlayerCard: React.FC<PlayerCardProps> = ({ game, player, currentPlayerId }) => {
+export const PlayerCard: React.FC<PlayerCardProps> = ({ game, player, currentPlayerId, resetEmoji }) => {
   const removeUser = (gameId: string, playerId: string) => {
     removePlayer(gameId, playerId);
   };
@@ -25,7 +26,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ game, player, currentPla
         backgroundColor: getCardColor(game, player.value),
       }}
     >
-      <div className='relative text-center -mt-5 mx-auto w-[95%] bg-white dark:bg-gray-900 border-2  border-gray-400 dark:border-gray-700 rounded-2xl flex items-center justify-center px-3 py-1'>
+      <div className='relative text-center -mt-5 mx-auto w-[95%] bg-white dark:bg-gray-900 border-2 border-gray-400 dark:border-gray-700 rounded-2xl flex items-center justify-center px-3 py-1'>
         <div className='min-h-11 w-full flex items-center justify-center' title={player.name}>
           <div className='text-center font-semibold text-sm leading-tight break-words line-clamp-2'>
             {player.name}
@@ -44,8 +45,8 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ game, player, currentPla
           )}
       </div>
       <div className='flex items-center justify-center text-gray-800 py-6 mb-3'>
-        <span className={`${getCardValue(player, game)?.length < 2 ? 'text-4xl' : 'text-3xl'}`}>
-          {getCardValue(player, game)}
+        <span className={`${getCardValue(player, game, resetEmoji)?.length < 2 ? 'text-4xl' : 'text-3xl'}`}>
+          {getCardValue(player, game, resetEmoji)}
         </span>
       </div>
     </div>
@@ -60,22 +61,22 @@ const getCardColor = (game: Game, value: number | null | undefined): string => {
   return '';
 };
 
-const getCardValue = (player: Player, game: Game) => {
+const getCardValue = (player: Player, game: Game, resetEmoji: string) => {
   if (game.gameStatus !== Status.Finished) {
     // Before game is revealed:
     // Show 👍 only if player has selected a value (not null/undefined)
-    // Show 🤔 if player hasn't selected or has reset their selection
+    // Show 🤔 (or theme emoji) if player hasn't selected or has reset their selection
     if (player.status === Status.Finished && player.value !== null && player.value !== undefined) {
       return '👍';
     }
-    return '🤔';
+    return resetEmoji;
   }
 
   if (game.gameStatus === Status.Finished) {
     if (player.status === Status.Finished) {
-      // If value is null, show thinking emoji (player reset their selection)
+      // If value is null, show reset emoji (player reset their selection)
       if (player.value === null || player.value === undefined) {
-        return '🤔';
+        return resetEmoji;
       }
 
       if (player.value === -1) {
@@ -84,7 +85,7 @@ const getCardValue = (player: Player, game: Game) => {
 
       return getCardDisplayValue(game, player.value);
     }
-    return '🤔';
+    return resetEmoji;
   }
 
   return '';

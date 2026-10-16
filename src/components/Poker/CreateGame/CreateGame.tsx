@@ -11,6 +11,7 @@ const gameNameConfig: Config = {
   separator: ' ',
   style: 'capital',
 };
+
 const userNameConfig: Config = {
   dictionaries: [starWars],
 };
@@ -45,6 +46,10 @@ export const CreateGame = () => {
       }
     }
     setLoading(true);
+
+    // Clear theme selection so it auto-detects on new session
+    localStorage.removeItem('selectedTheme');
+
     const game: NewGame = {
       name: gameName,
       createdBy: createdBy,
@@ -52,14 +57,13 @@ export const CreateGame = () => {
       isAllowMembersToManageSession: allowMembersToManageSession,
       cards: gameType === GameType.Custom ? getCustomCards(customOptions) : getCards(gameType),
       createdAt: new Date(),
-      createdByTeam: creatorTeam
+      createdByTeam: creatorTeam,
     };
     const result = await addNewGame(game);
     if (result) {
       localStorage.setItem('recentPlayerName', createdBy);
       localStorage.setItem('recentCreatorTeam', creatorTeam);
       localStorage.setItem('currentPlayerId', result.playerId);
-
       setLoading(false);
     }
     history.push(`/game/${result.gameId}`);
@@ -78,6 +82,7 @@ export const CreateGame = () => {
       setHasDefaults({ ...hasDefaults });
     }
   };
+
   const emptyCreatorName = () => {
     if (hasDefaults.name) {
       setCreatedBy('');

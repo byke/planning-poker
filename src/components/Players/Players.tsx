@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Game } from '../../types/game';
 import { Player } from '../../types/player';
 import { PlayerCard } from './PlayerCard/PlayerCard';
+import { ThemeName } from '../../utils/themeUtils';
 
 interface PlayersProps {
   game: Game;
@@ -12,6 +13,46 @@ interface PlayersProps {
 const TEAMS = ['Back End Developers', 'Front End Developers', 'Quality Assurance'];
 
 export const Players: React.FC<PlayersProps> = ({ game, players, currentPlayerId }) => {
+  const [resetEmoji, setResetEmoji] = useState('🤔');
+
+  // Update emoji when game theme changes
+  useEffect(() => {
+    const emojiMap: Record<ThemeName, string> = {
+      light: '🤔',
+      dark: '🤔',
+      halloween: '👻',
+      christmas: '🎅',
+      stPatricks: '🍀',
+      easter: '🐰',
+    };
+
+    if (game.theme) {
+      setResetEmoji(emojiMap[game.theme]);
+    }
+  }, [game.theme]);
+
+  // Also listen for manual theme changes (user selecting from dropdown)
+  useEffect(() => {
+    const handleThemeChange = (event: Event) => {
+      const customEvent = event as CustomEvent<ThemeName>;
+      const selectedTheme = customEvent.detail;
+
+      const emojiMap: Record<ThemeName, string> = {
+        light: '🤔',
+        dark: '🤔',
+        halloween: '👻',
+        christmas: '🎅',
+        stPatricks: '🍀',
+        easter: '🐰',
+      };
+
+      setResetEmoji(emojiMap[selectedTheme]);
+    };
+
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
+
   // Group players by team
   const playersByTeam = TEAMS.reduce((acc, team) => {
     acc[team] = players.filter((player) => player.team === team);
@@ -44,6 +85,7 @@ export const Players: React.FC<PlayersProps> = ({ game, players, currentPlayerId
                       game={game}
                       player={player}
                       currentPlayerId={currentPlayerId}
+                      resetEmoji={resetEmoji}
                     />
                   ))
                 ) : (

@@ -4,6 +4,7 @@ import './config/i18n';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import './service/analytics';
+import './styles/themeAccents.css';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

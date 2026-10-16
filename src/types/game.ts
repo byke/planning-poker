@@ -1,5 +1,6 @@
 import { CardConfig } from '../components/Players/CardPicker/CardConfigs';
 import { Status } from './status';
+import { ThemeName } from '../utils/themeUtils';
 
 export interface TimerProps {
   currentSeconds?: number;
@@ -8,6 +9,7 @@ export interface TimerProps {
   timerVisible?: boolean;
   timerPaused?: boolean;
 }
+
 export interface Game {
   id: string;
   name: string;
@@ -23,6 +25,7 @@ export interface Game {
   createdAt: Date;
   updatedAt?: Date;
   timerProps?: TimerProps;
+  theme?: ThemeName; // ADD THIS LINE
 }
 
 export interface NewGame {
@@ -32,16 +35,17 @@ export interface NewGame {
   isAllowMembersToManageSession?: boolean;
   createdBy: string;
   createdAt: Date;
-  createdByTeam: string,
-  createdByPlayerId?: string; 
+  createdByTeam: string;
+  createdByPlayerId?: string;
+  theme?: ThemeName;
 }
 
-export enum GameType {  
+export enum GameType {
   Days = 'Days',
   DaysImperial = 'Days (Imperial)',
   Fibonacci = 'Fibonacci',
   ShortFibonacci = 'ShortFibonacci',
   TShirt = 'TShirt',
-  TShirtAndNumber = 'TShirtAndNumber',  
-  Custom = 'Custom'
+  TShirtAndNumber = 'TShirtAndNumber',
+  Custom = 'Custom',
 }

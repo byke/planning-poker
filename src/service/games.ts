@@ -14,6 +14,7 @@ import { NewGame } from '../types/game';
 import { Player } from '../types/player';
 import { Status } from '../types/status';
 import { removeGameFromCache, resetPlayers, updatePlayerGames } from './players';
+import { getSelectedTheme } from '../utils/themeUtils';
 
 export const addNewGame = async (newGame: NewGame): Promise<{ gameId: string; playerId: string }> => {
   const player = {
@@ -22,6 +23,7 @@ export const addNewGame = async (newGame: NewGame): Promise<{ gameId: string; pl
     status: Status.NotStarted,
     team: newGame.createdByTeam,
   };
+
   const gameData = {
     ...newGame,
     id: ulid(),
@@ -29,7 +31,9 @@ export const addNewGame = async (newGame: NewGame): Promise<{ gameId: string; pl
     createdById: player.id,
     createdByPlayerId: player.id,
     gameStatus: Status.Started,
+    theme: getSelectedTheme(),
   };
+
   await addGameToStore(gameData.id, gameData);
   await addPlayerToGameInStore(gameData.id, player);
   updatePlayerGames(
@@ -39,7 +43,6 @@ export const addNewGame = async (newGame: NewGame): Promise<{ gameId: string; pl
     gameData.createdById,
     player.id,
   );
-
   return { gameId: gameData.id, playerId: player.id };
 };
 

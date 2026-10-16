@@ -1,0 +1,103 @@
+/* Halloween Theme Accents - Soft Orange */
+/* :html.halloween-theme {
+    --accent-panel: #D96C6C;
+    --accent-button: #6d28d9;
+    --accent-border: #fdba74;
+} */
+
+/* Christmas Theme Accents - Soft Red */
+html.christmas-theme {
+    --accent-panel: #fca5a5;
+    --accent-button: #15803d;
+    --accent-border: #f87171;
+}
+
+/* St. Patrick's Day Theme Accents - Soft Green */
+html.stPatricks-theme {
+    --accent-panel: #86efac;
+    --accent-button: #fcd34d;
+    --accent-border: #4ade80;
+}
+
+/* Easter Theme Accents - Soft Pink (already works) */
+html.easter-theme {
+    --accent-panel: #fce7f3;
+    --accent-button: #ec4899;
+    --accent-border: #fbcfe8;
+}
+
+/* Apply panel styling with theme colors */
+html.christmas-theme [id^="team-panel-"],
+html.stPatricks-theme [id^="team-panel-"],
+html.easter-theme [id^="team-panel-"] {
+    background-color: var(--accent-panel) !important;
+    border-color: var(--accent-border) !important;
+}
+
+/* Style select dropdowns for better visibility */
+select {
+ background-color: white;
+ color: #000;
+}
+
+select:disabled {
+ background-color: #f3f4f6;
+ color: #9ca3af;
+}
+
+select option {
+ background-color: white;
+ color: #000;
+ padding: 8px;
+}
+
+select option:checked {
+ background-color: #3b82f6;
+ color: white;
+}
+
+/* Dark theme select styling */
+:root.dark select,
+:root.dark select option {
+ background-color: #1f2937;
+ color: #e5e7eb;
+}
+
+:root.dark select option:checked {
+ background-color: #3b82f6;
+ color: white;
+}
+
+/* Theme-specific select styling */
+html.halloween-theme select,
+html.halloween-theme select option {
+ background-color: #1f2937;
+ color: #e5e7eb;
+}
+
+html.halloween-theme select option:checked {
+ background-color: #6d28d9;
+ color: white;
+}
+
+html.christmas-theme select,
+html.christmas-theme select option {
+ background-color: #fca5a5; /* Soft red (light) */
+ color: #7f1d1d;
+}
+
+html.christmas-theme select option:checked {
+ background-color: #dc2626;
+ color: white;
+}
+
+html.stPatricks-theme select,
+html.stPatricks-theme select option {
+ background-color: #86efac; /* Soft green (light) */
+ color: #1b4332;
+}
+
+html.stPatricks-theme select option:checked {
+ background-color: #228b22;
+ color: white;
+}

@@ -19,7 +19,7 @@ type TimerProps = {
 
 const getMinutesAndSeconds = (time: number) => [Math.floor(time / 60), time % 60];
 
-const audio = typeof Audio !== 'undefined' ? new Audio('/timer-notification.mp3') : null;
+const audio = typeof Audio !== 'undefined' ? new Audio('sounds/timer-notification.mp3') : null;
 
 export const TimerProgress: React.FC<TimerProps> = ({
   currentSeconds = 0,

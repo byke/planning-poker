@@ -14,6 +14,7 @@ import { Game, GameType, TimerProps } from '../../../types/game';
 import { Player } from '../../../types/player';
 import { Status } from '../../../types/status';
 import { isModerator } from '../../../utils/isModerator';
+import { playSound, getSoundEnabled, setSoundEnabled } from '../../../utils/soundUtils';
 import { ExitSVG } from '../../SVGs/Exit';
 import { EyeSVG } from '../../SVGs/Eye';
 import { InfoSVG } from '../../SVGs/Info';
@@ -38,6 +39,8 @@ export const GameController: React.FC<GameControllerProps> = ({
   const history = useHistory();
   const { t } = useTranslation();
   const [showCopiedMessage, setShowCopiedMessage] = useState(false);
+  const [soundEnabled, setSoundEnabledState] = useState(() => getSoundEnabled());
+  const [allVoted, setAllVoted] = useState(false);
 
   // Trigger confetti when game is revealed (for all participants)
   useEffect(() => {
@@ -45,6 +48,21 @@ export const GameController: React.FC<GameControllerProps> = ({
       triggerConfettiForEqualTeams(players);
     }
   }, [game.gameStatus, players]);
+
+  // Check if all players have voted
+  useEffect(() => {
+    if (game.gameStatus === 'In Progress' && Array.isArray(players) && players.length > 0) {
+      const allFinished = players.every((p: Player) => p.status === Status.Finished);
+
+      // Only play sound once when everyone has voted
+      if (allFinished && !allVoted && soundEnabled) {
+        playSound('millionaire.mp3');
+        setAllVoted(true);
+      } else if (!allFinished) {
+        setAllVoted(false);
+      }
+    }
+  }, [players, game.gameStatus, soundEnabled, allVoted]);
 
   // Auto-reveal when all players finish
   useEffect(() => {
@@ -66,7 +84,6 @@ export const GameController: React.FC<GameControllerProps> = ({
   const triggerConfettiForEqualTeams = (playersData: Player[]) => {
     TEAMS.forEach((team) => {
       const teamPlayers = playersData.filter((p) => p.team === team);
-
       // Only trigger if team has at least 2 members
       if (teamPlayers.length < 2) return;
 
@@ -99,6 +116,11 @@ export const GameController: React.FC<GameControllerProps> = ({
             y: (rect.top + rect.height / 2) / window.innerHeight,
           },
         });
+
+        // Play applause sound when confetti triggers
+        if (soundEnabled) {
+          playSound('ballhitcheer.mp3');
+        }
       }
     });
   };
@@ -130,6 +152,12 @@ export const GameController: React.FC<GameControllerProps> = ({
   const handleReveal = async () => {
     await finishGame(game.id);
     // Confetti will be triggered by the useEffect watching game.gameStatus
+  };
+
+  const toggleSound = () => {
+    const newState = !soundEnabled;
+    setSoundEnabledState(newState);
+    setSoundEnabled(newState);
   };
 
   const isMod = isModerator(game.createdById, currentPlayerId, game.isAllowMembersToManageSession);
@@ -232,6 +260,13 @@ export const GameController: React.FC<GameControllerProps> = ({
             className='hover:bg-blue-200'
             testId='invite-button'
             title='Copy invite link'
+          />
+          <ControllerButton
+            onClick={toggleSound}
+            icon={<span className='text-2xl'>{soundEnabled ? '🔊' : '🔇'}</span>}
+            label={soundEnabled ? 'Sound On' : 'Sound Off'}
+            className={soundEnabled ? 'hover:bg-yellow-200' : 'hover:bg-gray-200'}
+            title='Toggle sound effects'
           />
           <div className='w-full text-xs mt-2'>
             <label className='font-semibold'>{t('GameController.storyName')}:</label>

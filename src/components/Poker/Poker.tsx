@@ -6,6 +6,7 @@ import { Game } from '../../types/game';
 import { Player } from '../../types/player';
 import { Loading } from '../Loading/Loading';
 import { GameArea } from './GameArea/GameArea';
+import { useGameTheme } from '../../hooks/useGameTheme';
 
 export const Poker = () => {
   let { id } = useParams<{ id: string }>();
@@ -14,6 +15,9 @@ export const Poker = () => {
   const [players, setPlayers] = useState<Player[] | undefined>(undefined);
   const [loading, setIsLoading] = useState(true);
   const [currentPlayerId, setCurrentPlayerId] = useState<string | undefined>(undefined);
+
+  // Apply the game's theme to all participants
+  useGameTheme(game || null);
 
   useEffect(() => {
     const unblock = history.block((location, action) => {

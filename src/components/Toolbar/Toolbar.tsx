@@ -12,7 +12,7 @@ import { InfoSVG } from '../SVGs/Info';
 import { JoinSVG } from '../SVGs/Join';
 import { MenuSVG } from '../SVGs/Menu';
 import { PlusSVG } from '../SVGs/Plus';
-import { ThemeControl } from '../ThemeControl/ThemeControl';
+import { ThemeSelector } from '../ThemeSelector/ThemeSelector';
 import { MenuItem } from './MenuItem';
 export const title = 'Planning Poker';
 
@@ -96,7 +96,7 @@ export const Toolbar = () => {
       <div className='inline-flex items-center justify-end flex-1'>
         {screenSize === 'md' || screenSize === 'sm' || screenSize === 'xs' ? (
           <div className='flex relative' ref={dropdownRef}>
-            <ThemeControl />
+            <ThemeSelector />
             <LanguageControl />
             <button
               className='button-ghost flex items-center'
@@ -130,7 +130,7 @@ export const Toolbar = () => {
                 testId={item.testId}
               />
             ))}
-            <ThemeControl />
+            <ThemeSelector />
             <LanguageControl />
           </>
         )}
