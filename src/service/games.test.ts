@@ -251,7 +251,7 @@ describe('games service', () => {
 
     it('should return false if there are no players in the game in the DB', async () => {
       jest.spyOn(fb, 'getGameFromStore').mockResolvedValueOnce(mockGame);
-      jest.spyOn(fb, 'getPlayersFromStore').mockResolvedValueOnce(undefined);
+      jest.spyOn(fb, 'getPlayersFromStore').mockResolvedValueOnce(undefined as any); // Add "as any"
       const res = await updateGameStatus(mockId);
       expect(res).toBe(false);
     });
