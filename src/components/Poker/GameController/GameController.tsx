@@ -14,7 +14,7 @@ import { Game, GameType, TimerProps } from '../../../types/game';
 import { Player } from '../../../types/player';
 import { Status } from '../../../types/status';
 import { isModerator } from '../../../utils/isModerator';
-import { playSound, getSoundEnabled, setSoundEnabled } from '../../../utils/soundUtils';
+import { playSound, getSoundEnabled, setSoundEnabled, playRandomNoConfettiSound } from '../../../utils/soundUtils';
 import { ExitSVG } from '../../SVGs/Exit';
 import { EyeSVG } from '../../SVGs/Eye';
 import { InfoSVG } from '../../SVGs/Info';
@@ -40,7 +40,6 @@ export const GameController: React.FC<GameControllerProps> = ({
   const { t } = useTranslation();
   const [showCopiedMessage, setShowCopiedMessage] = useState(false);
   const [soundEnabled, setSoundEnabledState] = useState(() => getSoundEnabled());
-  const [allVoted, setAllVoted] = useState(false);
 
   // Trigger confetti when game is revealed (for all participants)
   useEffect(() => {
@@ -48,21 +47,6 @@ export const GameController: React.FC<GameControllerProps> = ({
       triggerConfettiForEqualTeams(players);
     }
   }, [game.gameStatus, players]);
-
-  // Check if all players have voted
-  useEffect(() => {
-    if (game.gameStatus === 'In Progress' && Array.isArray(players) && players.length > 0) {
-      const allFinished = players.every((p: Player) => p.status === Status.Finished);
-
-      // Only play sound once when everyone has voted
-      if (allFinished && !allVoted && soundEnabled) {
-        playSound('millionaire.mp3');
-        setAllVoted(true);
-      } else if (!allFinished) {
-        setAllVoted(false);
-      }
-    }
-  }, [players, game.gameStatus, soundEnabled, allVoted]);
 
   // Auto-reveal when all players finish
   useEffect(() => {
@@ -82,30 +66,28 @@ export const GameController: React.FC<GameControllerProps> = ({
   ]);
 
   const triggerConfettiForEqualTeams = (playersData: Player[]) => {
+    let confettiTriggered = false;
+
     TEAMS.forEach((team) => {
       const teamPlayers = playersData.filter((p) => p.team === team);
-      // Only trigger if team has at least 2 members
+
       if (teamPlayers.length < 2) return;
 
-      // Filter players who have submitted a vote (not null/undefined)
       const submittedPlayers = teamPlayers.filter(
         (p) => p.value !== undefined && p.value !== null
       );
 
-      // MUST have votes from everyone in the team
-      if (submittedPlayers.length === 0) return; // Nobody voted - don't show confetti
-      if (submittedPlayers.length !== teamPlayers.length) return; // Not everyone voted - don't show confetti
+      if (submittedPlayers.length === 0) return;
+      if (submittedPlayers.length !== teamPlayers.length) return;
 
-      // Check all submitted votes are identical
       const scores = submittedPlayers.map((p) => p.value);
       const uniqueScores = new Set(scores);
+      if (uniqueScores.size !== 1) return;
 
-      if (uniqueScores.size !== 1) return; // Scores are different - don't show confetti
+      confettiTriggered = true;
 
-      // Only if we get here should confetti trigger
       const panelId = `team-panel-${team.replace(/\s+/g, '-')}`;
       const element = document.getElementById(panelId);
-
       if (element) {
         const rect = element.getBoundingClientRect();
         confetti({
@@ -116,13 +98,17 @@ export const GameController: React.FC<GameControllerProps> = ({
             y: (rect.top + rect.height / 2) / window.innerHeight,
           },
         });
-
-        // Play applause sound when confetti triggers
-        if (soundEnabled) {
-          playSound('ballhitcheer.mp3');
-        }
       }
     });
+
+    // Play sound ONCE based on whether confetti triggered
+    if (soundEnabled) {
+      if (confettiTriggered) {
+        playSound('ballhitcheer.mp3'); // Play once for any confetti
+      } else {
+        playRandomNoConfettiSound();
+      }
+    }
   };
 
   const onAutoReveal = (value: boolean) => {
@@ -146,15 +132,12 @@ export const GameController: React.FC<GameControllerProps> = ({
 
   const handleRemoveGame = async (id: string) => {
     await removeGame(id);
-    // This redirects only the current user locally
-    // Other participants won't see the game is deleted until they refresh
-    // Solution: we need to ensure the game is actually deleted from Firestore
     history.push(`/`);
   };
 
   const handleReveal = async () => {
     await finishGame(game.id);
-    // Confetti will be triggered by the useEffect watching game.gameStatus
+    // Confetti and sounds will be triggered by the useEffect watching game.gameStatus
   };
 
   const toggleSound = () => {
@@ -164,6 +147,7 @@ export const GameController: React.FC<GameControllerProps> = ({
   };
 
   const isMod = isModerator(game.createdById, currentPlayerId, game.isAllowMembersToManageSession);
+
   const timerProps: {
     isMod?: boolean;
     timerVisible?: boolean;
@@ -172,6 +156,7 @@ export const GameController: React.FC<GameControllerProps> = ({
     totalSeconds?: number;
     soundOn?: boolean;
   } = { isMod: isMod, timerVisible: game.timerProps?.timerVisible };
+
   if (!isMod) {
     timerProps.isMod = false;
     timerProps.timerVisible = game.timerProps?.timerVisible;
@@ -194,6 +179,7 @@ export const GameController: React.FC<GameControllerProps> = ({
           </span>
           <AverageComponent game={game} players={players} />
         </div>
+
         {isMod && (
           <div
             className='flex justify-end p-2'
@@ -205,6 +191,7 @@ export const GameController: React.FC<GameControllerProps> = ({
             />
           </div>
         )}
+
         {/* Card Content */}
         {isMod && (
           <div className='flex justify-center px-2 pt-8 pb-2'>
@@ -217,6 +204,7 @@ export const GameController: React.FC<GameControllerProps> = ({
             />
           </div>
         )}
+
         <div className='flex flex-wrap justify-center gap-6 px-2 pt-8 pb-2'>
           {isMod && (
             <>
@@ -284,6 +272,7 @@ export const GameController: React.FC<GameControllerProps> = ({
           </div>
         </div>
       </div>
+
       {/* Snackbar/Alert */}
       {showCopiedMessage && (
         <div className='fixed top-6 right-6 z-50'>
@@ -345,6 +334,7 @@ interface AutoRevealProps {
 
 export const AutoReveal: React.FC<AutoRevealProps> = ({ autoReveal, onAutoReveal }) => {
   const { t } = useTranslation();
+
   return (
     <div className='flex flex-col items-center'>
       <label className='flex items-center cursor-pointer'>
@@ -384,12 +374,15 @@ const AverageComponent: React.FC<{ game: Game; players: Player[] }> = ({ game, p
   const NOT_APPLICABLE = 'N/A';
   const EMPTY = '-';
   const canShowAverage = gameType !== GameType.TShirt && gameType !== GameType.TShirtAndNumber;
+
   if (!canShowAverage) {
     return null;
   }
+
   const { t } = useTranslation();
   const gameAverage = getAverage(game, players);
   let average = game.gameStatus === Status.Finished && gameAverage ? gameAverage.toFixed(2) : EMPTY;
+
   return (
     <>
       <div className='mx-2 h-6 border-l border-gray-400 dark:border-gray-600' />
@@ -421,7 +414,9 @@ export function areAllFinishedPlayersDisplayValuesNumeric(game: Game, players: P
         game.gameType === GameType.Custom
           ? Number(game.cards.find((card) => card.value === player.value)?.displayValue)
           : player.value;
+
       if (!value) return false;
+
       const num = typeof value === 'number' ? value : Number(value);
       return !isNaN(num);
     });
@@ -431,11 +426,13 @@ export const getAverage = (game: Game, players: Player[]): number => {
   let values = 0;
   let numberOfPlayersPlayed = 0;
   const cards = game.cards;
+
   players.forEach((player) => {
     const value =
       game.gameType === GameType.Custom
         ? Number(cards.find((card) => card.value === player.value)?.displayValue)
         : player.value;
+
     if (
       player.status === Status.Finished &&
       value !== undefined &&
@@ -448,5 +445,6 @@ export const getAverage = (game: Game, players: Player[]): number => {
       numberOfPlayersPlayed++;
     }
   });
+
   return Math.round((values / numberOfPlayersPlayed) * 100) / 100;
 };
