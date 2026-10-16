@@ -14,7 +14,7 @@ import { Game, GameType, TimerProps } from '../../../types/game';
 import { Player } from '../../../types/player';
 import { Status } from '../../../types/status';
 import { isModerator } from '../../../utils/isModerator';
-import { playSound, getSoundEnabled, setSoundEnabled, playSequentialNoConfettiSound } from '../../../utils/soundUtils';
+import { playSound, getSoundEnabled, setSoundEnabled, getNextSoundFromIndex } from '../../../utils/soundUtils';
 import { ExitSVG } from '../../SVGs/Exit';
 import { EyeSVG } from '../../SVGs/Eye';
 import { InfoSVG } from '../../SVGs/Info';
@@ -106,8 +106,13 @@ export const GameController: React.FC<GameControllerProps> = ({
       if (confettiTriggered) {
         playSound('ballhitcheer.mp3');
       } else {
-        // Cycle through sounds sequentially - all players hear the same one
-        playSequentialNoConfettiSound(parseInt(game.id.replace(/[^0-9]/g, '')) || 1);
+        // Get current sound index from game, play it, then increment
+        const currentSoundIndex = game.soundIndex || 0;
+        const sound = getNextSoundFromIndex(currentSoundIndex);
+        playSound(sound);
+
+        // Update game with next sound index (stored in Firestore)
+        updateGame(game.id, { soundIndex: currentSoundIndex + 1 });
       }
     }
   };

@@ -16,22 +16,8 @@ const NO_CONFETTI_SOUNDS: SoundFile[] = [
     'family-fortunes-wrong-buzzer.mp3',
 ];
 
-// Cycle through sounds in order based on time
-export const getSequentialIndex = (gameSeed: number): number => {
-    // Change sound every minute
-    const currentMinute = Math.floor(Date.now() / 60000);
-    const combinedSeed = gameSeed + currentMinute;
-
-    // Cycle through sequentially
-    return combinedSeed % NO_CONFETTI_SOUNDS.length;
-};
-
-export const playSequentialNoConfettiSound = (gameSeed: number): void => {
-    if (NO_CONFETTI_SOUNDS.length === 0) return;
-
-    const soundIndex = getSequentialIndex(gameSeed);
-    const sound = NO_CONFETTI_SOUNDS[soundIndex];
-    playSound(sound);
+export const getNextSoundFromIndex = (currentSoundIndex: number): SoundFile => {
+    return NO_CONFETTI_SOUNDS[currentSoundIndex % NO_CONFETTI_SOUNDS.length];
 };
 
 export const playSound = (soundFile: string): void => {

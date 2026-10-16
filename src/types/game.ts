@@ -25,7 +25,8 @@ export interface Game {
   createdAt: Date;
   updatedAt?: Date;
   timerProps?: TimerProps;
-  theme?: ThemeName; // ADD THIS LINE
+  theme?: ThemeName;
+  soundIndex?: number;
 }
 
 export interface NewGame {
