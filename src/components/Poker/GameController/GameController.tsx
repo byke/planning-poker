@@ -104,9 +104,10 @@ export const GameController: React.FC<GameControllerProps> = ({
     // Play sound ONCE based on whether confetti triggered
     if (soundEnabled) {
       if (confettiTriggered) {
-        playSound('ballhitcheer.mp3'); // Play once for any confetti
+        playSound('ballhitcheer.mp3');
       } else {
-        playRandomNoConfettiSound();
+        // Use game ID as seed so all clients pick the same random sound
+        playRandomNoConfettiSound(parseInt(game.id.replace(/[^0-9]/g, '')) || 1);
       }
     }
   };

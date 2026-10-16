@@ -1,10 +1,10 @@
-export type SoundFile = 'amongus.mp3' 
-| 'millionaire.mp3' 
-| 'negativebeeps.mp3' 
-| 'minecraft-cat-meow.mp3' 
-| 'computer-says-no.mp3'
-| 'rizz.mp3'
-| 'family-fortunes-wrong-buzzer.mp3'; // Add more as you add files
+export type SoundFile = 'amongus.mp3'
+    | 'millionaire.mp3'
+    | 'negativebeeps.mp3'
+    | 'minecraft-cat-meow.mp3'
+    | 'computer-says-no.mp3'
+    | 'rizz.mp3'
+    | 'family-fortunes-wrong-buzzer.mp3';
 
 const NO_CONFETTI_SOUNDS: SoundFile[] = [
     'amongus.mp3',
@@ -13,14 +13,20 @@ const NO_CONFETTI_SOUNDS: SoundFile[] = [
     'minecraft-cat-meow.mp3',
     'computer-says-no.mp3',
     'rizz.mp3',
-    'family-fortunes-wrong-buzzer.mp3'
+    'family-fortunes-wrong-buzzer.mp3',
     // Add more sounds here as you add them
 ];
 
-export const playRandomNoConfettiSound = (): void => {
+// Seeded random: always returns the same "random" value for the same seed
+export const getSeededRandomIndex = (seed: number): number => {
+    const x = Math.sin(seed) * 10000;
+    return Math.floor((x - Math.floor(x)) * NO_CONFETTI_SOUNDS.length);
+};
+
+export const playRandomNoConfettiSound = (gameSeed: number): void => {
     if (NO_CONFETTI_SOUNDS.length === 0) return;
 
-    const randomIndex = Math.floor(Math.random() * NO_CONFETTI_SOUNDS.length);
+    const randomIndex = getSeededRandomIndex(gameSeed);
     const randomSound = NO_CONFETTI_SOUNDS[randomIndex];
     playSound(randomSound);
 };
