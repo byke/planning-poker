@@ -146,7 +146,10 @@ export const GameController: React.FC<GameControllerProps> = ({
 
   const handleRemoveGame = async (id: string) => {
     await removeGame(id);
-    window.location.href = '/';
+    // This redirects only the current user locally
+    // Other participants won't see the game is deleted until they refresh
+    // Solution: we need to ensure the game is actually deleted from Firestore
+    history.push(`/`);
   };
 
   const handleReveal = async () => {

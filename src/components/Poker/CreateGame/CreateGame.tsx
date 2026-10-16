@@ -47,8 +47,8 @@ export const CreateGame = () => {
     }
     setLoading(true);
 
-    // Clear theme selection so it auto-detects on new session
-    localStorage.removeItem('selectedTheme');
+    // IMPORTANT: Capture the theme BEFORE clearing localStorage
+    const selectedTheme = localStorage.getItem('selectedTheme');
 
     const game: NewGame = {
       name: gameName,
@@ -59,11 +59,17 @@ export const CreateGame = () => {
       createdAt: new Date(),
       createdByTeam: creatorTeam,
     };
+
     const result = await addNewGame(game);
+
     if (result) {
       localStorage.setItem('recentPlayerName', createdBy);
       localStorage.setItem('recentCreatorTeam', creatorTeam);
       localStorage.setItem('currentPlayerId', result.playerId);
+
+      // NOW clear theme so next game auto-detects by date
+      localStorage.removeItem('selectedTheme');
+
       setLoading(false);
     }
     history.push(`/game/${result.gameId}`);

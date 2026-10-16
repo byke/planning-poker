@@ -58,6 +58,9 @@ export const Poker = () => {
             setIsLoading(false);
             return;
           }
+        } else {
+          // Game was deleted from Firestore - redirect all participants
+          history.push('/');
         }
         setIsLoading(false);
       }

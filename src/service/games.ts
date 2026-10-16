@@ -31,7 +31,7 @@ export const addNewGame = async (newGame: NewGame): Promise<{ gameId: string; pl
     createdById: player.id,
     createdByPlayerId: player.id,
     gameStatus: Status.Started,
-    theme: getSelectedTheme(),
+    theme: getSelectedTheme(), // This will use selected theme or auto-detect
   };
 
   await addGameToStore(gameData.id, gameData);
