@@ -26,12 +26,15 @@ jest.mock('../repository/firebase', () => ({
   removePlayerFromGameInStore: jest.fn(),
   updatePlayerInStore: jest.fn(),
 }));
+
 jest.mock('../repository/localStorage', () => ({
   getPlayerGamesFromCache: jest.fn(),
   updatePlayerGamesInCache: jest.fn(),
 }));
+
 jest.mock('./games', () => ({ updateGameStatus: jest.fn() }));
 jest.mock('ulid', () => ({ ulid: () => 'cinnamon rolls' }));
+
 const fakeUlid = 'cinnamon rolls';
 
 describe('Players service', () => {
@@ -39,8 +42,9 @@ describe('Players service', () => {
     name: 'Mockingbird',
     id: '123-abc',
     status: Status.Started,
-    team: "Back End Developers"
+    team: 'Back End Developers',
   };
+
   const mockGame = {
     id: 'game-123',
     name: 'Mock Game',
@@ -64,18 +68,14 @@ describe('Players service', () => {
     it('should add a player if the game exists', async () => {
       const spy = jest.spyOn(fb, 'addPlayerToGameInStore');
       jest.spyOn(fb, 'getGameFromStore').mockResolvedValueOnce(mockGame);
-
       await addPlayer(mockGame.id, mockPlayer);
-
       expect(spy).toHaveBeenCalledWith(mockGame.id, mockPlayer);
     });
 
     it('should not add a player to store if the game does not exist', async () => {
       const spy = jest.spyOn(fb, 'addPlayerToGameInStore');
       jest.spyOn(fb, 'getGameFromStore').mockResolvedValueOnce(undefined);
-
       await addPlayer(mockGame.id, mockPlayer);
-
       expect(spy).toHaveBeenCalledTimes(0);
     });
   });
@@ -84,18 +84,14 @@ describe('Players service', () => {
     it('should remove a player from an existing game', async () => {
       const spy = jest.spyOn(fb, 'removePlayerFromGameInStore');
       jest.spyOn(fb, 'getGameFromStore').mockResolvedValueOnce(mockGame);
-
       await removePlayer(mockGame.id, mockPlayer.id);
-
       expect(spy).toHaveBeenCalledWith(mockGame.id, mockPlayer.id);
     });
 
     it('should not remove a player if the game does not exist', async () => {
       const spy = jest.spyOn(fb, 'removePlayerFromGameInStore');
       jest.spyOn(fb, 'getGameFromStore').mockResolvedValueOnce(undefined);
-
       await removePlayer(mockGame.id, mockPlayer.id);
-
       expect(spy).toHaveBeenCalledTimes(0);
     });
   });
@@ -106,9 +102,7 @@ describe('Players service', () => {
       const spyGame = jest.spyOn(games, 'updateGameStatus');
       const emoji = 'emeowticon';
       jest.spyOn(fb, 'getPlayerFromStore').mockResolvedValueOnce(mockPlayer);
-
       await updatePlayerValue(mockGame.id, mockPlayer.id, 3, emoji);
-
       expect(spyPlayer).toHaveBeenCalledWith(
         mockGame.id,
         expect.objectContaining({ value: 3, emoji }),
@@ -116,21 +110,17 @@ describe('Players service', () => {
       expect(spyGame).toHaveBeenCalledWith(mockGame.id);
     });
 
-    // NOTE: Shouldn't there be a case that the player doesn't get updated if the game doesn't exist? Fn doesn't have that logix
     it('should not update the player if the player does not exist', async () => {
       const spyPlayer = jest.spyOn(fb, 'updatePlayerInStore');
       const spyGame = jest.spyOn(games, 'updateGameStatus');
       jest.spyOn(fb, 'getPlayerFromStore').mockResolvedValueOnce(undefined);
-
       await updatePlayerValue(mockGame.id, mockPlayer.id, 3, '');
-
       expect(spyPlayer).toHaveBeenCalledTimes(0);
       expect(spyGame).toHaveBeenCalledTimes(0);
     });
   });
 
   describe('get recent games for player', () => {
-    // Older game 1 minute ago
     const olderMockGame = { ...mockGame, id: 'older', createdAt: new Date(Date.now() - 60000) };
     const newerMockGame = { ...mockGame, id: 'newer', createdAt: new Date() };
     const mockPlayerGames = [
@@ -163,9 +153,7 @@ describe('Players service', () => {
         .spyOn(fb, 'getGameFromStore')
         .mockResolvedValueOnce(olderMockGame)
         .mockResolvedValueOnce(newerMockGame);
-
       const games = await getPlayerRecentGames();
-
       expect(games).toHaveLength(2);
       expect(games[0].id).toEqual('newer');
       expect(games[1].id).toEqual('older');
@@ -173,9 +161,7 @@ describe('Players service', () => {
 
     it('should return an empty list if there are no games', async () => {
       jest.spyOn(storage, 'getPlayerGamesFromCache').mockReturnValueOnce([]);
-
       const games = await getPlayerRecentGames();
-
       expect(games).toHaveLength(0);
     });
   });
@@ -192,9 +178,7 @@ describe('Players service', () => {
         },
       ];
       jest.spyOn(storage, 'getPlayerGamesFromCache').mockReturnValueOnce(mockPlayerGames);
-
       const id = getCurrentPlayerId(mockGame.id);
-
       expect(id).toEqual(mockPlayer.id);
     });
 
@@ -209,9 +193,7 @@ describe('Players service', () => {
         },
       ];
       jest.spyOn(storage, 'getPlayerGamesFromCache').mockReturnValueOnce(mockPlayerGames);
-
       const id = getCurrentPlayerId(mockGame.id);
-
       expect(id).toBe(undefined);
     });
   });
@@ -236,7 +218,6 @@ describe('Players service', () => {
       ];
       jest.spyOn(storage, 'getPlayerGamesFromCache').mockReturnValueOnce(mockPlayerGames);
       const spy = jest.spyOn(storage, 'updatePlayerGamesInCache');
-
       updatePlayerGames(
         newGame.id,
         newGame.name,
@@ -244,13 +225,11 @@ describe('Players service', () => {
         newGame.createdById,
         newGame.playerId,
       );
-
       expect(spy).toHaveBeenCalledWith(expect.arrayContaining([...mockPlayerGames, newGame]));
     });
   });
 
   describe('check if the current player is in the game', () => {
-    // Older game 1 minute ago
     const olderMockGame = { ...mockGame, id: 'older', createdAt: new Date(Date.now() - 60000) };
     const newerMockGame = { ...mockGame, id: 'newer', createdAt: new Date() };
     const mockPlayerGames: PlayerGame[] = [
@@ -272,14 +251,11 @@ describe('Players service', () => {
 
     it('returns false when the player has no games with the given ID', async () => {
       jest.spyOn(storage, 'getPlayerGamesFromCache').mockReturnValueOnce(mockPlayerGames);
-
       const found = await isCurrentPlayerInGame('bleh');
-
       expect(found).toBe(false);
     });
 
     it('returns false when the player is not in the game according to DB and removes the game from cache', async () => {
-      // Have to do mocking twice because the removal requests the cache again
       jest
         .spyOn(storage, 'getPlayerGamesFromCache')
         .mockReturnValueOnce(mockPlayerGames)
@@ -295,9 +271,7 @@ describe('Players service', () => {
           playerId: mockPlayer.id,
         },
       ];
-
       const found = await isCurrentPlayerInGame(olderMockGame.id);
-
       expect(spy).toHaveBeenCalledWith(expect.arrayContaining(newGames));
       expect(found).toBe(false);
     });
@@ -305,9 +279,7 @@ describe('Players service', () => {
     it('returns true when the player is in game in both cache and DB', async () => {
       jest.spyOn(storage, 'getPlayerGamesFromCache').mockReturnValueOnce(mockPlayerGames);
       jest.spyOn(fb, 'getPlayerFromStore').mockResolvedValueOnce(mockPlayer);
-
       const found = await isCurrentPlayerInGame(newerMockGame.id);
-
       expect(found).toBe(true);
     });
   });
@@ -315,17 +287,13 @@ describe('Players service', () => {
   describe('check if player is in this game in the DB', () => {
     it("should return true when the player's in the game", async () => {
       jest.spyOn(fb, 'getPlayerFromStore').mockResolvedValueOnce(mockPlayer);
-
       const res = await isPlayerInGameStore(mockGame.id, mockPlayer.id);
-
       expect(res).toBe(true);
     });
 
     it("should return false when the player's not in the game", async () => {
       jest.spyOn(fb, 'getPlayerFromStore').mockResolvedValueOnce(undefined);
-
       const res = await isPlayerInGameStore(mockGame.id, mockPlayer.id);
-
       expect(res).toBe(false);
     });
   });
@@ -343,9 +311,7 @@ describe('Players service', () => {
       ];
       jest.spyOn(storage, 'getPlayerGamesFromCache').mockReturnValueOnce(mockGames);
       const spy = jest.spyOn(storage, 'updatePlayerGamesInCache');
-
       removeGameFromCache('banana');
-
       expect(spy).toHaveBeenCalledWith(mockGames);
     });
 
@@ -359,20 +325,16 @@ describe('Players service', () => {
       ];
       jest.spyOn(storage, 'getPlayerGamesFromCache').mockReturnValueOnce(mockPlayerGames);
       const spy = jest.spyOn(storage, 'updatePlayerGamesInCache');
-
       removeGameFromCache('one');
-
       expect(spy).toHaveBeenCalledWith(filteredGames);
     });
   });
 
   describe('add a player to the given game', () => {
-    it('should return false if the game does not exist', async () => {
+    it('should return empty string if the game does not exist', async () => {
       jest.spyOn(fb, 'getGameFromStore').mockResolvedValueOnce(undefined);
-
       const res = await addPlayerToGame('foo', 'bar', 'Back End Developers');
-
-      expect(res).toBe(false);
+      expect(res).toBe('');
     });
 
     it('should update the cache and DB with the new game for the player', async () => {
@@ -395,7 +357,8 @@ describe('Players service', () => {
       };
       const newList = [mockGames[0], newPlayerGame];
       const fakeName = 'peach';
-      const expected = { id: fakeUlid, name: fakeName, status: Status.NotStarted };
+      const expected = { id: fakeUlid, name: fakeName, status: Status.NotStarted, team: 'Back End Developers' };
+
       jest.spyOn(fb, 'getGameFromStore').mockResolvedValueOnce(newGame);
       jest.spyOn(storage, 'getPlayerGamesFromCache').mockReturnValueOnce(mockGames);
       const cacheSpy = jest.spyOn(storage, 'updatePlayerGamesInCache');
@@ -405,7 +368,8 @@ describe('Players service', () => {
 
       expect(cacheSpy).toHaveBeenCalledWith(newList);
       expect(dbSpy).toHaveBeenCalledWith(newGame.id, expect.objectContaining(expected));
-      expect(res).toBe(true);
+      // Returns the player ID as a string, not true
+      expect(res).toBe(fakeUlid);
     });
   });
 
@@ -416,11 +380,14 @@ describe('Players service', () => {
         { id: 'two', name: 'pea', status: Status.InProgress, value: 2, team: 'Back End Developers' },
         { id: 'three', name: 'carrot', status: Status.Started, value: 3, team: 'Back End Developers' },
       ];
+
+      // Updated: value is now null instead of 0
       const expectedPlayers = [
-        { id: 'one', name: 'potato', status: Status.NotStarted, value: 0 },
-        { id: 'two', name: 'pea', status: Status.NotStarted, value: 0 },
-        { id: 'three', name: 'carrot', status: Status.NotStarted, value: 0 },
+        { id: 'one', name: 'potato', status: Status.NotStarted, value: null, team: 'Back End Developers' },
+        { id: 'two', name: 'pea', status: Status.NotStarted, value: null, team: 'Back End Developers' },
+        { id: 'three', name: 'carrot', status: Status.NotStarted, value: null, team: 'Back End Developers' },
       ];
+
       const gId = 'soup';
       jest.spyOn(fb, 'getPlayersFromStore').mockResolvedValueOnce(fakePlayers);
       const spy = jest.spyOn(fb, 'updatePlayerInStore');

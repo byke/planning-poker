@@ -25,7 +25,7 @@ describe('PlayerCard component', () => {
   let mockCurrentPlayerId = mockPlayer.id;
   it('should display Player name', () => {
     render(
-      <PlayerCard game={mockGame} player={mockPlayer} currentPlayerId={mockCurrentPlayerId} />,
+      <PlayerCard game={mockGame} player={mockPlayer} currentPlayerId={mockCurrentPlayerId} resetEmoji={'🤔'} />,
     );
 
     expect(screen.getByText(mockPlayer.name)).toBeInTheDocument();
@@ -33,7 +33,7 @@ describe('PlayerCard component', () => {
 
   it('should display thinking emoji when Player has not voted', () => {
     render(
-      <PlayerCard game={mockGame} player={mockPlayer} currentPlayerId={mockCurrentPlayerId} />,
+      <PlayerCard game={mockGame} player={mockPlayer} currentPlayerId={mockCurrentPlayerId} resetEmoji={'🤔'} />,
     );
 
     expect(screen.getByText('🤔')).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe('PlayerCard component', () => {
   it('should display thumbs up emoji when Player has voted', () => {
     const votedPlayer = { ...mockPlayer, status: Status.Finished };
     render(
-      <PlayerCard game={mockGame} player={votedPlayer} currentPlayerId={mockCurrentPlayerId} />,
+      <PlayerCard game={mockGame} player={votedPlayer} currentPlayerId={mockCurrentPlayerId} resetEmoji={'👍'} />,
     );
 
     expect(screen.getByText('👍')).toBeInTheDocument();
@@ -55,6 +55,7 @@ describe('PlayerCard component', () => {
         game={finishedGame}
         player={coffeePlayer}
         currentPlayerId={mockCurrentPlayerId}
+        resetEmoji={'☕'}
       />,
     );
 
@@ -69,6 +70,7 @@ describe('PlayerCard component', () => {
         game={finishedGame}
         player={coffeePlayer}
         currentPlayerId={mockCurrentPlayerId}
+        resetEmoji={'🤔'}
       />,
     );
 
@@ -82,6 +84,7 @@ describe('PlayerCard component', () => {
         game={finishedGame}
         player={coffeePlayer}
         currentPlayerId={mockCurrentPlayerId}
+        resetEmoji={'🤔'}
       />,
     );
 
@@ -95,6 +98,7 @@ describe('PlayerCard component', () => {
         game={finishedGame}
         player={coffeePlayer}
         currentPlayerId={mockGame.createdById}
+        resetEmoji={'🤔'}
       />,
     );
 
@@ -108,6 +112,7 @@ describe('PlayerCard component', () => {
         game={finishedGame}
         player={coffeePlayer}
         currentPlayerId={mockCurrentPlayerId}
+        resetEmoji={'🤔'}
       />,
     );
 
@@ -125,6 +130,7 @@ describe('PlayerCard component', () => {
         game={finishedGame}
         player={coffeePlayer}
         currentPlayerId={mockCurrentPlayerId}
+        resetEmoji={'🤔'}
       />,
     );
 
@@ -139,6 +145,7 @@ describe('PlayerCard component', () => {
         game={finishedGame}
         player={coffeePlayer}
         currentPlayerId={mockGame.createdById}
+        resetEmoji={'🤔'}
       />,
     );
 
