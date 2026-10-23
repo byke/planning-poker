@@ -35,6 +35,7 @@ export const CreateGame = () => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+
     if (gameType === GameType.Custom) {
       const count = customOptions.reduce(
         (acc, option) => (option && option.trim() !== '' ? acc + 1 : acc),
@@ -45,6 +46,7 @@ export const CreateGame = () => {
         return;
       }
     }
+
     setLoading(true);
 
     // IMPORTANT: Capture the theme BEFORE clearing localStorage
@@ -72,6 +74,7 @@ export const CreateGame = () => {
 
       setLoading(false);
     }
+
     history.push(`/game/${result.gameId}`);
   };
 
@@ -103,6 +106,7 @@ export const CreateGame = () => {
         <h2 className='text-2xl font-semibold mb-4 text-center'>
           {t('CreateGame.newSessionHeader')}
         </h2>
+
         <div className='flex flex-col gap-4'>
           <div>
             <label className='block text-sm font-medium mb-1'>
@@ -118,6 +122,7 @@ export const CreateGame = () => {
               onChange={(event) => setGameName(event.target.value)}
             />
           </div>
+
           <div>
             <label className='block text-sm font-medium mb-1'>Your Team</label>
             <select
@@ -131,8 +136,10 @@ export const CreateGame = () => {
               <option value='Back End Developers'>Back End Developers</option>
               <option value='Front End Developers'>Front End Developers</option>
               <option value='Quality Assurance'>Quality Assurance</option>
+              <option value='Observer'>👀 Observer (Read-only)</option>
             </select>
           </div>
+
           <div>
             <label className='block text-sm font-medium mb-1'>
               {t('CreateGame.yourNameLabel')}
@@ -147,6 +154,7 @@ export const CreateGame = () => {
               onChange={(event) => setCreatedBy(event.target.value)}
             />
           </div>
+
           <fieldset>
             <legend className='block text-sm font-medium mb-2'>
               {t('CreateGame.sessionSizingType')}
@@ -175,6 +183,7 @@ export const CreateGame = () => {
               ))}
             </div>
           </fieldset>
+
           {gameType === GameType.Custom && (
             <>
               <div className='flex flex-wrap gap-2 mb-2'>
@@ -195,6 +204,7 @@ export const CreateGame = () => {
               )}
             </>
           )}
+
           <label className='inline-flex items-center mt-2'>
             <input
               type='checkbox'
@@ -205,6 +215,7 @@ export const CreateGame = () => {
             <span className='ml-2'>{t('CreateGame.allowMembersToManageSession')}</span>
           </label>
         </div>
+
         <div className='flex justify-end mt-6'>
           <button
             type='submit'

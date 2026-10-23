@@ -17,6 +17,10 @@ export const CardPicker: React.FC<CardPickerProps> = ({ game, players, currentPl
   const { t } = useTranslation();
   const [randomEmoji, setRandomEmoji] = useState(getRandomEmoji);
 
+  // Check if current player is an observer
+  const currentPlayer = players.find((p) => p.id === currentPlayerId);
+  const isObserver = currentPlayer?.team === 'Observer';
+
   const playPlayer = (gameId: string, playerId: string, card: CardConfig) => {
     if (game.gameStatus !== Status.Finished) {
       updatePlayerValue(gameId, playerId, card.value, randomEmoji);
@@ -25,7 +29,7 @@ export const CardPicker: React.FC<CardPickerProps> = ({ game, players, currentPl
 
   // Handle reset card click
   const handleReset = () => {
-    if (game.gameStatus !== Status.Finished) {
+    if (game.gameStatus !== Status.Finished && !isObserver) {
       updatePlayerValue(game.id, currentPlayerId, null, randomEmoji);
     }
   };
@@ -39,33 +43,43 @@ export const CardPicker: React.FC<CardPickerProps> = ({ game, players, currentPl
   const cards = game.cards?.length ? game.cards : getCards(game.gameType);
   const currentPlayerValue = players.find((p) => p.id === currentPlayerId)?.value;
 
+  // Determine instruction text
+  const getInstructionText = (): string => {
+    if (isObserver) {
+      return '👀 Observers have no vote';
+    }
+    if (game.gameStatus !== Status.Finished) {
+      return t('CardPicker.ClickOnTheCardToVote');
+    }
+    return t('CardPicker.SessionNotReadyForVotingWaitForModeratorToStart');
+  };
+
   return (
     <div className='w-full max-w-full animate-fade-in-down'>
       <div className='text-center text-lg font-semibold my-4'>
-        {game.gameStatus !== Status.Finished
-          ? t('CardPicker.ClickOnTheCardToVote')
-          : t('CardPicker.SessionNotReadyForVotingWaitForModeratorToStart')}
+        {getInstructionText()}
       </div>
+
       <div className='flex flex-wrap justify-center gap-6 py-4 '>
         {/* Reset Card (🤔) */}
         <div
           onClick={handleReset}
           className={`
-              cursor-pointer select-none transition-all duration-300
-              rounded shadow-md border
-              border-gray-300
-              flex flex-col items-center justify-center
-              bg-white
-              text-gray-800
-              hover:scale-115
-              w-15 h-23
-              md:w-20 md:h-30
-              sm:w-15 sm:h-23
-              ${currentPlayerValue === null || currentPlayerValue === undefined
+            cursor-pointer select-none transition-all duration-300
+            rounded shadow-md border
+            border-gray-300
+            flex flex-col items-center justify-center
+            bg-white
+            text-gray-800
+            hover:scale-115
+            w-15 h-23
+            md:w-20 md:h-30
+            sm:w-15 sm:h-23
+            ${currentPlayerValue === null || currentPlayerValue === undefined
               ? 'border-dashed border-2 border-gray-800 z-10 shadow-lg scale-115'
               : 'shadow-md scale-100'
             }
-            ${game.gameStatus === Status.Finished
+            ${game.gameStatus === Status.Finished || isObserver
               ? 'pointer-events-none opacity-50 cursor-not-allowed'
               : ''
             }
@@ -77,6 +91,7 @@ export const CardPicker: React.FC<CardPickerProps> = ({ game, players, currentPl
         {/* Regular Cards */}
         {cards.map((card: CardConfig, index) => {
           const isSelected = players.find((p) => p.id === currentPlayerId)?.value === card.value;
+
           return (
             <div
               key={card.value}
@@ -96,7 +111,7 @@ export const CardPicker: React.FC<CardPickerProps> = ({ game, players, currentPl
                   ? 'border-dashed border-2 border-gray-800 z-10 shadow-lg scale-115'
                   : 'shadow-md scale-100'
                 }
-                ${game.gameStatus === Status.Finished
+                ${game.gameStatus === Status.Finished || isObserver
                   ? 'pointer-events-none opacity-50 cursor-not-allowed'
                   : ''
                 }
@@ -133,6 +148,7 @@ export const CardPicker: React.FC<CardPickerProps> = ({ game, players, currentPl
           );
         })}
       </div>
+
       <div className='flex justify-center'>
         <GoogleAd />
       </div>

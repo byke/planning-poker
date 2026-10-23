@@ -18,8 +18,7 @@ export const JoinGame = () => {
   );
 
   useEffect(() => {
-    let isMounted = true; // Track if component is mounted
-
+    let isMounted = true;
     async function fetchData() {
       if (joinGameId) {
         if (await getGame(joinGameId)) {
@@ -43,10 +42,7 @@ export const JoinGame = () => {
         }
       }
     }
-
     fetchData();
-
-    // Cleanup function: mark component as unmounted
     return () => {
       isMounted = false;
     };
@@ -60,17 +56,19 @@ export const JoinGame = () => {
     const playerTeam = (form.elements.namedItem('playerTeam') as HTMLInputElement)?.value;
 
     setLoading(true);
+
     if (joinGameId) {
       localStorage.setItem('recentPlayerName', playerName);
       localStorage.setItem('recentPlayerTeam', playerTeam);
-
       const playerIdRes = await addPlayerToGame(gameId, playerName, playerTeam);
+
       if (playerIdRes) {
         localStorage.setItem('currentPlayerId', playerIdRes);
         history.push(`/game/${joinGameId}`);
       } else {
         setIsGameFound(false);
       }
+
       setLoading(false);
     }
   };
@@ -97,6 +95,7 @@ export const JoinGame = () => {
                 <p className='text-red-600 text-xs mt-1'>Session not found, check the ID</p>
               )}
             </div>
+
             <div>
               <label className='block text-sm font-medium mb-1'>Team</label>
               <select
@@ -110,8 +109,10 @@ export const JoinGame = () => {
                 <option value='Back End Developers'>Back End Developers</option>
                 <option value='Front End Developers'>Front End Developers</option>
                 <option value='Quality Assurance'>Quality Assurance</option>
+                <option value='Observer'>Observer (Read-only)</option>
               </select>
             </div>
+
             <div>
               <label className='block text-sm font-medium mb-1'>Your Name</label>
               <input
@@ -125,6 +126,7 @@ export const JoinGame = () => {
               />
             </div>
           </div>
+
           <div className='flex justify-end mt-6'>
             <button
               type='submit'
@@ -137,6 +139,7 @@ export const JoinGame = () => {
           </div>
         </div>
       </form>
+
       {showNotExistMessage && (
         <div className='fixed top-6 right-6 z-50'>
           <div

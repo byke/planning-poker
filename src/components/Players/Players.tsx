@@ -25,7 +25,6 @@ export const Players: React.FC<PlayersProps> = ({ game, players, currentPlayerId
       stPatricks: '🍀',
       easter: '🐰',
     };
-
     if (game.theme) {
       setResetEmoji(emojiMap[game.theme]);
     }
@@ -36,7 +35,6 @@ export const Players: React.FC<PlayersProps> = ({ game, players, currentPlayerId
     const handleThemeChange = (event: Event) => {
       const customEvent = event as CustomEvent<ThemeName>;
       const selectedTheme = customEvent.detail;
-
       const emojiMap: Record<ThemeName, string> = {
         light: '🤔',
         dark: '🤔',
@@ -45,7 +43,6 @@ export const Players: React.FC<PlayersProps> = ({ game, players, currentPlayerId
         stPatricks: '🍀',
         easter: '🐰',
       };
-
       setResetEmoji(emojiMap[selectedTheme]);
     };
 
@@ -58,6 +55,9 @@ export const Players: React.FC<PlayersProps> = ({ game, players, currentPlayerId
     acc[team] = players.filter((player) => player.team === team);
     return acc;
   }, {} as Record<string, Player[]>);
+
+  // Get observers separately
+  const observers = players.filter((player) => player.team === 'Observer');
 
   return (
     <div className='pt-5 px-4'>
@@ -97,6 +97,30 @@ export const Players: React.FC<PlayersProps> = ({ game, players, currentPlayerId
             </div>
           );
         })}
+
+        {/* Observers Panel */}
+        {observers.length > 0 && (
+          <div
+            key='observers'
+            id='team-panel-observers'
+            className='border border-gray-300 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-800 flex-1 min-w-80 max-w-280'
+          >
+            <h3 className='text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300'>
+              Observers
+            </h3>
+            <div className='grid grid-cols-3 gap-2 w-full'>
+              {observers.map((player: Player) => (
+                <PlayerCard
+                  key={player.id}
+                  game={game}
+                  player={player}
+                  currentPlayerId={currentPlayerId}
+                  resetEmoji={resetEmoji}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -69,6 +69,7 @@ export const GameController: React.FC<GameControllerProps> = ({
     let confettiTriggered = false;
 
     TEAMS.forEach((team) => {
+      // Only check voting teams, not observers
       const teamPlayers = playersData.filter((p) => p.team === team);
 
       if (teamPlayers.length < 2) return;
@@ -434,6 +435,9 @@ export const getAverage = (game: Game, players: Player[]): number => {
   const cards = game.cards;
 
   players.forEach((player) => {
+    // Skip observers
+    if (player.team === 'Observer') return;
+
     const value =
       game.gameType === GameType.Custom
         ? Number(cards.find((card) => card.value === player.value)?.displayValue)

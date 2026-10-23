@@ -14,7 +14,12 @@ interface PlayerCardProps {
   resetEmoji: string;
 }
 
-export const PlayerCard: React.FC<PlayerCardProps> = ({ game, player, currentPlayerId, resetEmoji }) => {
+export const PlayerCard: React.FC<PlayerCardProps> = ({
+  game,
+  player,
+  currentPlayerId,
+  resetEmoji,
+}) => {
   const removeUser = (gameId: string, playerId: string) => {
     removePlayer(gameId, playerId);
   };
@@ -44,8 +49,12 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ game, player, currentPla
             </button>
           )}
       </div>
+
       <div className='flex items-center justify-center text-gray-800 py-6 mb-3'>
-        <span className={`${getCardValue(player, game, resetEmoji)?.length < 2 ? 'text-4xl' : 'text-3xl'}`}>
+        <span
+          className={`${getCardValue(player, game, resetEmoji)?.length < 2 ? 'text-4xl' : 'text-3xl'
+            }`}
+        >
           {getCardValue(player, game, resetEmoji)}
         </span>
       </div>
@@ -62,6 +71,11 @@ const getCardColor = (game: Game, value: number | null | undefined): string => {
 };
 
 const getCardValue = (player: Player, game: Game, resetEmoji: string) => {
+  // Observers always show 👀
+  if (player.team === 'Observer') {
+    return '👀';
+  }
+
   if (game.gameStatus !== Status.Finished) {
     // Before game is revealed:
     // Show 👍 only if player has selected a value (not null/undefined)
@@ -78,11 +92,9 @@ const getCardValue = (player: Player, game: Game, resetEmoji: string) => {
       if (player.value === null || player.value === undefined) {
         return resetEmoji;
       }
-
       if (player.value === -1) {
         return player.emoji || '☕'; // coffee emoji
       }
-
       return getCardDisplayValue(game, player.value);
     }
     return resetEmoji;
@@ -93,7 +105,5 @@ const getCardValue = (player: Player, game: Game, resetEmoji: string) => {
 
 const getCardDisplayValue = (game: Game, cardValue: number | null | undefined): string => {
   const cards = game.cards?.length > 0 ? game.cards : getCards(game.gameType);
-  return (
-    cards.find((card) => card.value === cardValue)?.displayValue || cardValue?.toString() || ''
-  );
+  return cards.find((card) => card.value === cardValue)?.displayValue || cardValue?.toString() || '';
 };
