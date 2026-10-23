@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import confetti from 'canvas-confetti';
@@ -42,11 +42,21 @@ export const GameController: React.FC<GameControllerProps> = ({
   const [soundEnabled, setSoundEnabledState] = useState(() => getSoundEnabled());
 
   // Trigger confetti when game is revealed (for all participants)
+  // Track the previous status and latest players so we only react to the
+  // moment the game flips to Finished, not to later player changes
+  const previousStatusRef = useRef(game.gameStatus);
+  const latestPlayersRef = useRef(players);
+  latestPlayersRef.current = players;
+
   useEffect(() => {
-    if (game.gameStatus === Status.Finished) {
-      triggerConfettiForEqualTeams(players);
+    const wasFinished = previousStatusRef.current === Status.Finished;
+    const isFinished = game.gameStatus === Status.Finished;
+    previousStatusRef.current = game.gameStatus;
+
+    if (isFinished && !wasFinished) {
+      triggerConfettiForEqualTeams(latestPlayersRef.current);
     }
-  }, [game.gameStatus, players]);
+  }, [game.gameStatus]);
 
   // Auto-reveal when all players finish
   useEffect(() => {
@@ -102,8 +112,11 @@ export const GameController: React.FC<GameControllerProps> = ({
       }
     });
 
+    // Only play a sound if at least one player actually voted
+    const anyVotes = playersData.some((p) => p.value !== undefined && p.value !== null);
+
     // Play sound ONCE based on whether confetti triggered
-    if (soundEnabled) {
+    if (soundEnabled && anyVotes) {
       if (confettiTriggered) {
         playSound('ballhitcheer.mp3');
       } else {

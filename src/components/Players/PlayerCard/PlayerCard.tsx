@@ -26,14 +26,14 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
 
   return (
     <div
-      className='rounded shadow-lg w-25 bg-gray-200 dark:bg-gray-800 border-gray-300 dark:border-gray-600 border mb-5 m-2'
+      className='relative rounded shadow-md w-full max-w-20 h-20 min-w-0 bg-gray-200 dark:bg-gray-800 border-gray-300 dark:border-gray-600 border mb-2'
       style={{
         backgroundColor: getCardColor(game, player.value),
       }}
     >
-      <div className='relative text-center -mt-5 mx-auto w-[95%] bg-white dark:bg-gray-900 border-2 border-gray-400 dark:border-gray-700 rounded-2xl flex items-center justify-center px-3 py-1'>
-        <div className='min-h-11 w-full flex items-center justify-center' title={player.name}>
-          <div className='text-center font-semibold text-sm leading-tight break-words line-clamp-2'>
+      <div className='absolute -top-3 left-1/2 -translate-x-1/2 w-[95%] text-center bg-white dark:bg-gray-900 border-2 border-gray-400 dark:border-gray-700 rounded-xl flex items-center justify-center px-1.5 py-0.5'>
+        <div className='min-h-7 w-full flex items-center justify-center' title={player.name}>
+          <div className='text-center font-semibold text-xs leading-tight break-words line-clamp-2'>
             {player.name}
           </div>
         </div>
@@ -41,18 +41,18 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
           player.id !== currentPlayerId && (
             <button
               title='Remove'
-              className='cursor-pointer absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center rounded-full bg-white dark:bg-gray-900 hover:bg-red-100 dark:hover:bg-red-950 shadow-md border-2 border-red-400 transition'
+              className='cursor-pointer absolute -top-1.5 -right-1.5 h-4 w-4 flex items-center justify-center rounded-full bg-white dark:bg-gray-900 hover:bg-red-100 dark:hover:bg-red-950 shadow-md border-2 border-red-400 transition'
               onClick={() => removeUser(game.id, player.id)}
               data-testid='remove-button'
             >
-              <TrashSVG className='h-3 w-3 text-red-400' />
+              <TrashSVG className='h-2 w-2 text-red-400' />
             </button>
           )}
       </div>
 
-      <div className='flex items-center justify-center text-gray-800 py-6 mb-3'>
+      <div className='flex items-center justify-center text-gray-800 h-full pt-2'>
         <span
-          className={`${getCardValue(player, game, resetEmoji)?.length < 2 ? 'text-4xl' : 'text-3xl'
+          className={`${getCardValue(player, game, resetEmoji)?.length < 2 ? 'text-2xl' : 'text-xl'
             }`}
         >
           {getCardValue(player, game, resetEmoji)}
