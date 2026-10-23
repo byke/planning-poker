@@ -4,6 +4,7 @@ export type SoundFile = 'amongus.mp3'
     | 'minecraft-cat-meow.mp3'
     | 'computer-says-no.mp3'
     | 'rizz.mp3'
+    | 'faaah.mp3'
     | 'family-fortunes-wrong-buzzer.mp3';
 
 const NO_CONFETTI_SOUNDS: SoundFile[] = [
@@ -13,6 +14,7 @@ const NO_CONFETTI_SOUNDS: SoundFile[] = [
     'minecraft-cat-meow.mp3',
     'computer-says-no.mp3',
     'rizz.mp3',
+    'faaah.mp3',
     'family-fortunes-wrong-buzzer.mp3',
 ];
 
